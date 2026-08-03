@@ -123,7 +123,7 @@
 /* Right column: the white form card, next to the text */
 .book-viewing__panel {
   flex: 1 1 460px;
-  max-width: 500px;
+  max-width: 600px;
   display: flex;
   justify-content: center;
 }
@@ -176,6 +176,7 @@
 
 .book-viewing__field {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -193,13 +194,27 @@
 }
 
 .book-viewing__field input,
-.book-viewing__field select {
+.book-viewing__field select,
+.book-viewing__phone-row select {
   border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-sm);
   padding: 11px 12px;
+  height: 44px;
+  line-height: 1.2;
   font-size: 0.9rem;
   background-color: var(--color-bg);
   color: var(--color-ink);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.book-viewing__field select,
+.book-viewing__phone-row select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%232B2521'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 30px;
 }
 
 .book-viewing__phone-row {
@@ -209,15 +224,23 @@
 
 .book-viewing__phone-row select {
   flex: 1;
-  border: 1px solid var(--color-accent-soft);
-  border-radius: var(--radius-sm);
-  padding: 11px 12px;
-  background-color: var(--color-bg);
-  font-size: 0.9rem;
 }
 
 .book-viewing__phone-row input {
   flex: 1;
+}
+
+.book-viewing__field input:-webkit-autofill,
+.book-viewing__field input:-webkit-autofill:hover,
+.book-viewing__field input:-webkit-autofill:focus,
+.book-viewing__phone-row input:-webkit-autofill,
+.book-viewing__phone-row input:-webkit-autofill:hover,
+.book-viewing__phone-row input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg) inset;
+  box-shadow: 0 0 0 1000px var(--color-bg) inset;
+  -webkit-text-fill-color: var(--color-ink);
+  caret-color: var(--color-ink);
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 .book-viewing__submit {

@@ -7,7 +7,7 @@ import Signup from './pages/Signup.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminMainPage from './pages/AdminMainPage.jsx'
 import BookViewing from './pages/BookViewing.jsx'
-import Maps from './pages/Maps.jsx'
+import AllListing from './pages/AllListing.jsx'
 import Contact from './pages/Contact.jsx'
 import List from './pages/List.jsx'
 import Profile from './pages/Profile.jsx'
@@ -39,7 +39,7 @@ function App() {
           }
         />
         <Route path="/book-viewing" element={<BookViewing />} />
-        <Route path="/maps" element={<Maps />} />
+        <Route path="/all-listing" element={<AllListing />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/list-property" element={<List />} />
         <Route

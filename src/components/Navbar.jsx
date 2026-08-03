@@ -9,9 +9,9 @@ function Navbar() {
 
         <nav className="navbar__links">
           <Link to="/">Home</Link>
+          <Link to="/all-listing">All Listing</Link>
           <Link to="/list-property">List My Property</Link>
           <Link to="/book-viewing">Book Viewing</Link>
-          <Link to="/maps">Maps</Link>
           <Link to="/contact">Contact Us</Link>
         </nav>
 
