@@ -12,7 +12,7 @@ function Login() {
         <div className="auth-card">
 
           <Link to="" className="auth-card__brand">Login</Link>
-          <p className="auth-card__intro">Log in to manage your listings and saved properties.</p>
+          {/* <p className="auth-card__intro">Log in to manage your listings and saved properties.</p> */}
 
           <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
             <label htmlFor="identifier">Username / Email</label>

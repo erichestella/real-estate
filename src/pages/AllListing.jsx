@@ -34,6 +34,12 @@ const mapProperties = [
     image: 'https://i.pinimg.com/1200x/d4/53/15/d45315c6406925c66791f215c299364c.jpg',
     lat: 14.5083,
     lng: 120.9822,
+    address: 'Roxas Boulevard, Parañaque City',
+    lister: {
+      name: 'Mr. Jerome A. Santos',
+      phone: '0917 234 5678',
+      email: 'jerome.santos@yourrealstate.com',
+    },
   },
   {
     id: 'YR-73140',
@@ -44,6 +50,12 @@ const mapProperties = [
     image: 'https://i.pinimg.com/736x/7c/dd/d3/7cddd359e1f8df8b528c1f30cf16a6b1.jpg',
     lat: 14.5137,
     lng: 120.9865,
+    address: 'Aseana Business Park, Parañaque City',
+    lister: {
+      name: 'Ms. Karen L. Villanueva',
+      phone: '0918 345 6789',
+      email: 'karen.villanueva@yourrealstate.com',
+    },
   },
   {
     id: 'YR-95160',
@@ -54,6 +66,15 @@ const mapProperties = [
     image: 'https://i.pinimg.com/1200x/0c/46/79/0c4679231cce2def3ec84134ee295b9a.jpg',
     lat: 14.5453,
     lng: 121.0198,
+    bedrooms: 3,
+    bathrooms: 4,
+    garage: 3,
+    address: 'South Forbes Park, Makati City',
+    lister: {
+      name: 'Ms. Patricia G. Reyes',
+      phone: '0919 456 7890',
+      email: 'patricia.reyes@yourrealstate.com',
+    },
   },
   {
     id: 'YR-88120',
@@ -64,6 +85,12 @@ const mapProperties = [
     image: 'https://i.pinimg.com/736x/3d/f9/95/3df995674be1a35dac536b20fc78896e.jpg',
     lat: 14.4189,
     lng: 121.0311,
+    address: 'Ayala Alabang Village, Muntinlupa City',
+    lister: {
+      name: 'Mr. Ramon T. Bautista',
+      phone: '0920 567 8901',
+      email: 'ramon.bautista@yourrealstate.com',
+    },
   },
   {
     id: 'YR-64410',
@@ -74,6 +101,15 @@ const mapProperties = [
     image: 'https://i.pinimg.com/736x/2c/0d/49/2c0d4915f8ff63ef037cabf7d88e5ad1.jpg',
     lat: 14.5570,
     lng: 121.0224,
+    bedrooms: 4,
+    bathrooms: 3,
+    garage: 2,
+    address: 'Urdaneta Village, Makati City',
+    lister: {
+      name: 'Ms. Angela M. Cruz',
+      phone: '0921 678 9012',
+      email: 'angela.cruz@yourrealstate.com',
+    },
   },
   {
     id: 'YR-51290',
@@ -84,6 +120,12 @@ const mapProperties = [
     image: 'https://i.pinimg.com/736x/6d/1e/2c/6d1e2c631542855931b1e22a3a1e993d.jpg',
     lat: 14.6392,
     lng: 121.0410,
+    address: 'Timog Avenue, Quezon City',
+    lister: {
+      name: 'Mr. Dennis P. Aquino',
+      phone: '0922 789 0123',
+      email: 'dennis.aquino@yourrealstate.com',
+    },
   },
 ]
 
@@ -228,14 +270,14 @@ function Maps() {
 
           {activeProperty && (
             <div className="property-details" ref={detailsRef}>
-              <button
+              {/* <button
                 type="button"
                 className="property-details__close"
                 aria-label="Close details"
                 onClick={() => setActiveProperty(null)}
               >
                 ×
-              </button>
+              </button> */}
               <img
                 src={activeProperty.image}
                 alt={activeProperty.name}

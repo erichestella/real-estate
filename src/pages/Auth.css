@@ -35,24 +35,21 @@
 }
 
 .auth-card--wide {
-  max-width: 520px;
+  max-width: 650px;
 }
 
 .auth-card__brand {
   display: inline-block;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 2.7rem;
   letter-spacing: 0.08em;
   color: var(--color-ink);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
 
-.auth-card__brand:hover {
-  opacity: 0.8;
-}
 
 .auth-card__intro {
   margin-bottom: 28px;
@@ -69,7 +66,7 @@
 .auth-form label {
   font-size: 0.78rem;
   color: var(--color-ink-muted);
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .auth-form input {
@@ -81,6 +78,7 @@
   background-color: var(--color-bg);
   color: var(--color-ink);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin-top: 5px;
 }
 
 .auth-form input:focus {
