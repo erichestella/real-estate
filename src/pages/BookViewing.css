@@ -1,0 +1,260 @@
+.book-viewing {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: calc(84px + 40px) 20px 40px;
+}
+
+/* Shared full-page background photo behind both columns */
+.book-viewing__bg {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: 0;
+}
+
+.book-viewing__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(43, 37, 33, 0.3) 0%, rgba(43, 37, 33, 0.5) 100%);
+}
+
+/* Row that holds the text column and the card, side by side, over the photo */
+.book-viewing__row {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+}
+
+/* Left column: text straight over the photo, no card/box */
+.book-viewing__side {
+  flex: 1 1 300px;
+  max-width: 340px;
+  padding-top: 8px;
+  color: var(--color-white);
+}
+
+.book-viewing__side-title {
+  color: var(--color-white);
+  font-size: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.book-viewing__side-copy {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.88rem;
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.book-viewing__slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.book-viewing__slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.book-viewing__slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+.book-viewing__stars {
+  color: var(--color-accent);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.book-viewing__quote {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.book-viewing__quote-author {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--color-white);
+}
+
+.book-viewing__dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.book-viewing__dots button {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.book-viewing__dots button.is-active {
+  background: var(--color-white);
+  transform: scale(1.2);
+}
+
+/* Right column: the white form card, next to the text */
+.book-viewing__panel {
+  flex: 1 1 460px;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+}
+
+.book-viewing__card {
+  width: 100%;
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+  padding: 40px 40px 44px;
+}
+
+.book-viewing__title {
+  font-size: 1.6rem;
+  margin-bottom: 14px;
+}
+
+.book-viewing__intro {
+  font-size: 0.92rem;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.book-viewing__image {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  border-radius: var(--radius-md);
+  margin: 20px 0;
+  box-shadow: var(--shadow-soft);
+  object-fit: cover;
+}
+
+.book-viewing__form-note {
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  margin-bottom: 12px;
+}
+
+.book-viewing__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-viewing__form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.book-viewing__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.book-viewing__field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.book-viewing__field label span {
+  color: var(--color-ink);
+  margin-left: 2px;
+}
+
+.book-viewing__field input,
+.book-viewing__field select {
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  font-size: 0.9rem;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+}
+
+.book-viewing__phone-row {
+  display: flex;
+  gap: 10px;
+}
+
+.book-viewing__phone-row select {
+  flex: 1;
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  background-color: var(--color-bg);
+  font-size: 0.9rem;
+}
+
+.book-viewing__phone-row input {
+  flex: 1;
+}
+
+.book-viewing__submit {
+  align-self: flex-end;
+  background-color: var(--color-ink);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 28px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-top: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.book-viewing__submit:hover {
+  background-color: var(--color-ink-muted);
+}
+
+@media (max-width: 900px) {
+  .book-viewing {
+    padding: calc(84px + 24px) 16px 28px;
+  }
+
+  .book-viewing__row {
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .book-viewing__side {
+    max-width: 500px;
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  .book-viewing__card {
+    padding: 30px 24px 34px;
+  }
+}

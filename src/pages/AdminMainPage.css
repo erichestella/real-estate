@@ -1,0 +1,196 @@
+.admin {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-main {
+  padding: 44px 24px 80px;
+  flex: 1;
+}
+
+.admin-main__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-main__header h1 {
+  font-size: 1.7rem;
+  margin-bottom: 6px;
+}
+
+.admin-main__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-header-dark);
+  color: var(--color-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-main__add:hover {
+  background-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.admin-sort {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.admin-sort__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-sort__field label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-muted);
+}
+
+.admin-sort__field select {
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  background-color: var(--color-white);
+}
+
+.admin-listing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.admin-listing-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-listing-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(43, 37, 33, 0.14);
+}
+
+/* Shopee/Lazada-style square product image with a floating status badge */
+.admin-listing-card__image {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, var(--color-accent-soft), var(--color-accent));
+}
+
+.admin-listing-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-listing-card__image .status-pill {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.admin-listing-card__body {
+  padding: 12px 14px 16px;
+}
+
+.admin-listing-card__id {
+  font-size: 0.65rem;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-listing-card__body h3 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  margin: 4px 0 6px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+.admin-listing-card__price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #C0512E;
+  margin: 0 0 4px;
+}
+
+.admin-listing-card__desc {
+  font-size: 0.78rem;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.admin-listing-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-bg-alt);
+}
+
+.status-pill {
+  font-size: 0.68rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: var(--color-bg-alt);
+  color: var(--color-ink);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(43, 37, 33, 0.15);
+}
+
+.status-pill--forsale { background-color: #DDEAD9; }
+.status-pill--forrent { background-color: #D9E4EF; }
+.status-pill--pending { background-color: #F1E4C7; }
+.status-pill--sold { background-color: #E7D9D9; }
+
+.admin-listing-card__posted {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+@media (max-width: 960px) {
+  .admin-listing-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-listing-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-sort {
+    justify-content: flex-start;
+  }
+}

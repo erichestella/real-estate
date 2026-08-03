@@ -1,0 +1,81 @@
+.hero {
+  position: relative;
+  padding-bottom: 0;
+  overflow: hidden;
+  min-height: clamp(480px, 62vw, 720px);
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Full-bleed background photo, text sits directly on top like the reference. */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(20, 16, 13, 0.82) 0%,
+    rgba(20, 16, 13, 0.55) 42%,
+    rgba(20, 16, 13, 0.15) 68%,
+    rgba(20, 16, 13, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  z-index: 1;
+  padding: 60px 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.12;
+  max-width: 640px;
+  color: var(--color-white);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+
+.hero__subtitle {
+  max-width: 520px;
+  font-size: 1.02rem;
+  color: var(--color-accent-soft);
+}
+
+.hero__search {
+  margin-top: 32px;
+}
+
+@media (max-width: 960px) {
+  .hero {
+    min-height: 560px;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: 480px;
+  }
+  .hero__inner {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    min-height: 420px;
+  }
+}
