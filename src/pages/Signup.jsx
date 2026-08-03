@@ -10,7 +10,7 @@ function Signup() {
 
       <div className="auth-page">
         <div className="auth-card auth-card--wide">
-          <Link to="" className="auth-card__brand">Register </Link>
+          <Link to="" className="auth-card__brand">Create an Account</Link>
           {/* <p className="auth-card__intro">Create an account to list, save, and manage properties.</p> */}
 
           <form className="auth-form" onSubmit={(e) => e.preventDefault()}>

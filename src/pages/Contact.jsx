@@ -130,7 +130,8 @@ export default function Contact() {
                   onChange={handleLightChange}
                   required
                 >
-                  <option value="" disabled selected></option>
+                  
+                  <option value="" disabled>Please Select</option>
                   <option value="residential">Residential Buyer</option>
                   <option value="commercial">Commercial Investor</option>
                   <option value="partner">Property Partner</option>
