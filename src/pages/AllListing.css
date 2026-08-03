@@ -131,6 +131,27 @@
   line-height: 1.4;
 }
 
+.map-popup__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 6px;
+}
+
+.map-popup__specs span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.map-popup__specs i {
+  color: var(--color-accent);
+  font-size: 0.7rem;
+}
+
 .map-popup__btn {
   width: 100%;
   margin-top: 6px;
@@ -149,31 +170,22 @@
   background-color: var(--color-ink-muted);
 }
 
-/* Full-details modal, shown when a popup's "View Full Details" is clicked */
-.property-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(32, 27, 23, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 2000;
-}
-
-.property-modal {
+/* Full-details panel, shown under the map when a popup's
+   "View Full Details" button is clicked */
+.property-details {
   position: relative;
-  width: 100%;
-  max-width: 420px;
-  max-height: 85vh;
-  overflow-y: auto;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
   background-color: var(--color-white);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
-  padding: 28px;
+  padding: 24px;
 }
 
-.property-modal__close {
+.property-details__close {
   position: absolute;
   top: 14px;
   right: 14px;
@@ -188,15 +200,21 @@
   cursor: pointer;
 }
 
-.property-modal__image {
+.property-details__image {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 600px;              /* set whatever height you want */
+  object-fit: cover;          /* or 'contain' — prevents stretching */
+  display: block;
+  margin: 0 0 18px;
   border-radius: var(--radius-md);
-  margin-bottom: 16px;
 }
 
-.property-modal__id {
+.property-details__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.property-details__id {
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   color: var(--color-accent);
@@ -204,35 +222,103 @@
   margin: 0 0 6px;
 }
 
-.property-modal__price {
+.property-details__price {
   font-family: var(--font-display);
-  font-size: 1.4rem;
-  margin: 0 0 6px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
   color: var(--color-ink);
 }
 
-.property-modal__name {
-  font-size: 1rem;
+.property-details__name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
   margin: 0 0 8px;
   color: var(--color-ink);
   line-height: 1.4;
 }
 
-.property-modal__sqm {
+.property-details__address {
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  margin: 0 0 12px;
+}
+
+.property-details__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+.property-details__specs li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.property-details__specs i {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+.property-details__lister {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.property-details__lister-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 4px;
+}
+
+.property-details__lister-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0 0 6px;
+}
+
+.property-details__lister-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  margin: 0 0 4px;
+}
+
+.property-details__lister-contact i {
+  color: var(--color-accent);
+  width: 14px;
+}
+
+.property-details__sqm {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-accent);
   margin: 0 0 10px;
 }
 
-.property-modal__desc {
+.property-details__desc {
   font-size: 0.9rem;
   color: var(--color-ink-muted);
   line-height: 1.55;
   margin: 0 0 10px;
 }
 
-.property-modal__coords {
+.property-details__coords {
   font-size: 0.78rem;
   color: var(--color-ink-muted);
   margin: 0;

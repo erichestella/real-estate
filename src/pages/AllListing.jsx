@@ -7,6 +7,25 @@ import './AllListing.css'
 // Featured Properties section (name, sqm, short description, price, photo).
 const mapProperties = [
   {
+    id: 'YR-12238',
+    name: '2-Bedroom House and Lot, Buenaventura Subdivision',
+    sqm: '796 SQM',
+    description: '2-bedroom, 2-toilet & bath home with a 4-car garage, situated in a quiet subdivision.',
+    price: '₱123,567,902.05',
+    image: 'https://i.pinimg.com/1200x/0c/46/79/0c4679231cce2def3ec84134ee295b9a.jpg',
+    lat: 14.5378,
+    lng: 121.0014,
+    bedrooms: 2,
+    bathrooms: 2,
+    garage: 4,
+    address: '1223 St., Buenaventura Subdivision',
+    lister: {
+      name: 'Ms. Maria C. Dela Cruz',
+      phone: '0949392292',
+      email: 'mariacdc@gmail.com',
+    },
+  },
+  {
     id: 'YR-73160',
     name: 'Commercial Property along Roxas Boulevard, Parañaque',
     sqm: '2,228 SQM',
@@ -104,6 +123,7 @@ function loadLeaflet() {
 function Maps() {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
+  const detailsRef = useRef(null)
   const [activeProperty, setActiveProperty] = useState(null)
 
   useEffect(() => {
@@ -123,6 +143,17 @@ function Maps() {
       }).addTo(map)
 
       mapProperties.forEach((property) => {
+        const specsHtml =
+          property.bedrooms || property.bathrooms || property.garage
+            ? `
+              <div class="map-popup__specs">
+                ${property.bedrooms ? `<span><i class="fa-solid fa-bed"></i>${property.bedrooms} Bed</span>` : ''}
+                ${property.bathrooms ? `<span><i class="fa-solid fa-sink"></i>${property.bathrooms} Bath</span>` : ''}
+                ${property.garage ? `<span><i class="fa-solid fa-warehouse"></i>${property.garage} Garage</span>` : ''}
+              </div>
+            `
+            : ''
+
         const popupHtml = `
           <div class="map-popup">
             <img src="${property.image}" alt="${property.name}" class="map-popup__image" />
@@ -130,6 +161,7 @@ function Maps() {
               <p class="map-popup__price">${property.price}</p>
               <h4 class="map-popup__name">${property.name}</h4>
               <p class="map-popup__sqm">${property.sqm}</p>
+              ${specsHtml}
               <p class="map-popup__desc">${property.description}</p>
               <button type="button" class="map-popup__btn" data-property-id="${property.id}">
                 View Full Details
@@ -164,6 +196,12 @@ function Maps() {
     }
   }, [])
 
+  useEffect(() => {
+    if (activeProperty && detailsRef.current) {
+      detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [activeProperty])
+
   return (
     <div>
       <Navbar />
@@ -188,6 +226,79 @@ function Maps() {
             <div className="maps-page__map" ref={mapContainerRef} />
           </div>
 
+          {activeProperty && (
+            <div className="property-details" ref={detailsRef}>
+              <button
+                type="button"
+                className="property-details__close"
+                aria-label="Close details"
+                onClick={() => setActiveProperty(null)}
+              >
+                ×
+              </button>
+              <img
+                src={activeProperty.image}
+                alt={activeProperty.name}
+                className="property-details__image"
+              />
+              <div className="property-details__body">
+                <p className="property-details__id">Listing ID: {activeProperty.id}</p>
+                <h2 className="property-details__price">{activeProperty.price}</h2>
+                <h3 className="property-details__name">{activeProperty.name}</h3>
+                {activeProperty.address && (
+                  <p className="property-details__address">{activeProperty.address}</p>
+                )}
+
+                {(activeProperty.bedrooms || activeProperty.bathrooms || activeProperty.garage) && (
+                  <ul className="property-details__specs">
+                    {activeProperty.bedrooms && (
+                      <li>
+                        <i className="fa-solid fa-bed" aria-hidden="true" />
+                        {activeProperty.bedrooms} Bedroom{activeProperty.bedrooms > 1 ? 's' : ''}
+                      </li>
+                    )}
+                    {activeProperty.bathrooms && (
+                      <li>
+                        <i className="fa-solid fa-sink" aria-hidden="true" />
+                        {activeProperty.bathrooms} Bathroom{activeProperty.bathrooms > 1 ? 's' : ''}
+                      </li>
+                    )}
+                    {activeProperty.garage && (
+                      <li>
+                        <i className="fa-solid fa-warehouse" aria-hidden="true" />
+                        {activeProperty.garage}-Car Garage
+                      </li>
+                    )}
+                    <li>
+                      <i className="fa-solid fa-ruler-combined" aria-hidden="true" />
+                      {activeProperty.sqm}
+                    </li>
+                  </ul>
+                )}
+
+                <p className="property-details__desc">{activeProperty.description}</p>
+                <p className="property-details__coords">
+                  Coordinates: {activeProperty.lat}, {activeProperty.lng}
+                </p>
+
+                {activeProperty.lister && (
+                  <div className="property-details__lister">
+                    <p className="property-details__lister-label">Listed by</p>
+                    <p className="property-details__lister-name">{activeProperty.lister.name}</p>
+                    <p className="property-details__lister-contact">
+                      <i className="fa-solid fa-phone" aria-hidden="true" />
+                      {activeProperty.lister.phone}
+                    </p>
+                    <p className="property-details__lister-contact">
+                      <i className="fa-solid fa-envelope" aria-hidden="true" />
+                      {activeProperty.lister.email}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* <div className="maps-page__tile">
             <h3>How to read the map</h3>
             <p>
@@ -198,40 +309,6 @@ function Maps() {
           </div> */}
         </div>
       </section>
-
-      {activeProperty && (
-        <div
-          className="property-modal-overlay"
-          onClick={() => setActiveProperty(null)}
-        >
-          <div
-            className="property-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="property-modal__close"
-              aria-label="Close details"
-              onClick={() => setActiveProperty(null)}
-            >
-              ×
-            </button>
-            <img
-              src={activeProperty.image}
-              alt={activeProperty.name}
-              className="property-modal__image"
-            />
-            <p className="property-modal__id">Listing ID: {activeProperty.id}</p>
-            <h2 className="property-modal__price">{activeProperty.price}</h2>
-            <h3 className="property-modal__name">{activeProperty.name}</h3>
-            <p className="property-modal__sqm">{activeProperty.sqm}</p>
-            <p className="property-modal__desc">{activeProperty.description}</p>
-            <p className="property-modal__coords">
-              Coordinates: {activeProperty.lat}, {activeProperty.lng}
-            </p>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>
