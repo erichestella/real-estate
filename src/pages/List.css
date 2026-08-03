@@ -37,8 +37,7 @@
 }
 
 .list-prop-form,
-.list-prop-header,
-.success-state {
+.list-prop-header {
   background-color: var(--color-bg-alt);
   border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-lg);
@@ -307,54 +306,108 @@
   transform: translateY(-1px);
 }
 
-/* Success State Styles */
-.success-state {
-  text-align: center;
-  padding: 40px 20px;
+/* Popup shown after the listing form is submitted — centered modal-style,
+   with a dim backdrop, sits for ~3s, then auto-dismisses (JS side removes
+   it from the DOM after the timeout; the fade-out animation covers the
+   last bit of that window). Form fields are cleared at the same time. */
+.list-toast-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background-color: rgba(43, 37, 33, 0.55);
+  animation: list-toast-backdrop-in 0.35s ease forwards,
+             list-toast-backdrop-out 0.35s ease 2.65s forwards;
 }
 
-.success-icon {
-  width: 50px;
-  height: 50px;
-  background-color: var(--color-accent);
-  color: var(--color-bg);
-  font-size: 22px;
-  font-weight: 700;
-  border-radius: 50%;
+.list-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  width: min(440px, 88vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 40px 36px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-accent-soft);
+  border-top: 5px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  animation: list-toast-in 0.35s ease forwards,
+             list-toast-out 0.35s ease 2.65s forwards;
+}
+
+.list-toast__icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px auto;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: var(--color-white);
 }
 
-.success-state h3 {
-  font-size: 20px;
+.list-toast__text {
+  min-width: 0;
+}
+
+.list-toast__title {
+  font-family: var(--font-display);
+  font-size: 22px;
   font-weight: 700;
   color: var(--color-ink);
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
 
-.success-state p {
-  font-size: 14px;
+.list-toast__desc {
+  font-size: 15px;
   color: var(--color-ink-muted);
-  margin-bottom: 24px;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.btn-reset {
-  background-color: transparent;
-  color: var(--color-header-dark);
-  border: 1px solid var(--color-accent);
-  padding: 10px 20px;
-  font-weight: 600;
-  font-size: 13px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
+@keyframes list-toast-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.btn-reset:hover {
-  background-color: var(--color-accent);
-  color: var(--color-bg);
+@keyframes list-toast-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes list-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes list-toast-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+@media (max-width: 480px) {
+  .list-toast {
+    width: 90vw;
+    padding: 32px 24px;
+  }
 }
 
 /* Responsive adjustments */

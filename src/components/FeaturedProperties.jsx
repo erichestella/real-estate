@@ -1,67 +1,6 @@
+import { useNavigate } from 'react-router-dom'
+import properties from '../data/properties.js'
 import './FeaturedProperties.css'
-
-const properties = [
-  {
-    id: 'YR-73160',
-    title: '2,228 SQM Commercial Property for Sale along Roxas Boulevard, Parañaque',
-    location: 'Parañaque',
-    price: '₱5,000,000,000',
-    beds: null,
-    baths: null,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/1200x/d4/53/15/d45315c6406925c66791f215c299364c.jpg',
-  },
-  {
-    id: 'YR-73140',
-    title: '2,378 SQM Commercial Property for Sale in Aseana Business Park, Brgy. Tambo, Parañaque City',
-    location: 'Parañaque',
-    price: '₱3,500,000,000',
-    beds: null,
-    baths: null,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/736x/7c/dd/d3/7cddd359e1f8df8b528c1f30cf16a6b1.jpg',
-  },
-  {
-    id: 'YR-95160',
-    title: 'Grand 2-Storey Mansion for Sale in South Forbes Park, Makati',
-    location: 'Forbes Park, Makati',
-    price: '₱3,500,000,000',
-    beds: 3,
-    baths: null,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/1200x/0c/46/79/0c4679231cce2def3ec84134ee295b9a.jpg',
-  },
-  {
-    id: 'YR-88120',
-    title: 'Vacant Residential Lot in Ayala Alabang Village, Muntinlupa',
-    location: 'Ayala Alabang, Muntinlupa',
-    price: '₱180,000,000',
-    beds: null,
-    baths: null,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/736x/3d/f9/95/3df995674be1a35dac536b20fc78896e.jpg',
-  },
-  {
-    id: 'YR-64410',
-    title: 'Fully Furnished 4BR Family Home in Urdaneta Village, Makati',
-    location: 'Makati',
-    price: '₱120,000,000',
-    beds: 4,
-    baths: 3,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/736x/2c/0d/49/2c0d4915f8ff63ef037cabf7d88e5ad1.jpg',
-  },
-  {
-    id: 'YR-51290',
-    title: 'Corner Commercial Building along Timog Avenue, Quezon City',
-    location: 'Quezon City',
-    price: '₱250,000,000',
-    beds: null,
-    baths: null,
-    status: 'AVAILABLE',
-    image: 'https://i.pinimg.com/736x/6d/1e/2c/6d1e2c631542855931b1e22a3a1e993d.jpg',
-  },
-]
 
 const PinIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -88,13 +27,31 @@ const BathIcon = () => (
 )
 
 function FeaturedProperties() {
+  const navigate = useNavigate()
+
+  const goToProperty = (id) => {
+    navigate(`/property/${id}`)
+  }
+
   return (
     <section className="featured container">
       <h2 className="featured__title">Featured Properties</h2>
 
       <div className="featured__grid">
         {properties.map((property) => (
-          <article className="property-card" key={property.id}>
+          <article
+            className="property-card"
+            key={property.id}
+            onClick={() => goToProperty(property.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                goToProperty(property.id)
+              }
+            }}
+            role="button"
+            tabIndex={0}
+          >
             <div className="property-card__image">
               <img src={property.image} alt={property.title} loading="lazy" />
               <span className="property-card__location">

@@ -4,7 +4,7 @@ import Footer from '../components/Footer.jsx';
 import './List.css';
 
 export default function List() {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     firstName: '',
     lastName: '',
     email: '',
@@ -15,10 +15,12 @@ export default function List() {
     sellerType: 'I am selling a property I personally own',
     sellingFrequency: 'This is my first time selling a property',
     wazeLink: '',
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
 
   const [images, setImages] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +42,16 @@ export default function List() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    // Show the popup, then clear all the form fields
+    setShowToast(true);
+    setFormData(initialFormData);
+    setImages([]);
+
+    // Auto-dismiss the popup after 3 seconds
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -61,21 +72,7 @@ export default function List() {
           <p>Share a few details below so our real estate brokers can confidentially review your property for possible inclusion in Presello's curated listings.</p>
         </div>
 
-        {submitted ? (
-          <div className="success-state">
-            <div className="success-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-            </div>
-            <h3>Listing Submitted Successfully!</h3>
-            <p>Our acquisition team will review your property details and contact you within 24-48 hours.</p>
-            <button className="btn-reset" onClick={() => setSubmitted(false)}>
-              Submit Another Property
-            </button>
-          </div>
-        ) : (
-          <form className="list-prop-form" onSubmit={handleSubmit}>
+        <form className="list-prop-form" onSubmit={handleSubmit}>
             
             {/* Section 1: Customer Info */}
             <div className="form-section">
@@ -284,7 +281,23 @@ export default function List() {
             </div>
 
           </form>
-        )}
+
+          {showToast && (
+            <>
+              <div className="list-toast-backdrop" />
+              <div className="list-toast" role="status">
+                <span className="list-toast__icon" aria-hidden="true">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </span>
+                <div className="list-toast__text">
+                  <p className="list-toast__title">Listing Submitted Successfully!</p>
+                  <p className="list-toast__desc">Our acquisition team will review your property details and contact you within 24-48 hours.</p>
+                </div>
+              </div>
+            </>
+          )}
 
       </div>
 

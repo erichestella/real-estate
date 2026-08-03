@@ -4,14 +4,17 @@ import Footer from '../components/Footer.jsx';
 import './Contact.css';
 
 export default function Contact() {
-  const [lightFormData, setLightFormData] = useState({
+  const initialLightFormData = {
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     customerType: '',
     notes: '',
-  });
+  };
+
+  const [lightFormData, setLightFormData] = useState(initialLightFormData);
+  const [showLightToast, setShowLightToast] = useState(false);
 
   const [expertFormData, setExpertFormData] = useState({
     firstName: '',
@@ -22,7 +25,16 @@ export default function Contact() {
     preferredTime: '',
   });
 
-  const [expertSubmitted, setExpertSubmitted] = useState(false);
+  const initialExpertFormData = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    action: '',
+    preferredTime: '',
+  };
+
+  const [showExpertToast, setShowExpertToast] = useState(false);
 
   const handleLightChange = (e) => {
     const { name, value } = e.target;
@@ -36,14 +48,28 @@ export default function Contact() {
 
   const handleLightSubmit = (e) => {
     e.preventDefault();
-    console.log('Light Form Submitted:', lightFormData);
-    alert('Thank you! Message sent.');
+
+    // Show the popup, then clear all the form fields
+    setShowLightToast(true);
+    setLightFormData(initialLightFormData);
+
+    // Auto-dismiss the popup after 3 seconds
+    setTimeout(() => {
+      setShowLightToast(false);
+    }, 3000);
   };
 
   const handleExpertSubmit = (e) => {
     e.preventDefault();
-    alert(`Thank you, ${expertFormData.firstName}! A real estate expert will contact you shortly.`);
-    setExpertSubmitted(true);
+
+    // Show the popup, then clear all the form fields
+    setShowExpertToast(true);
+    setExpertFormData(initialExpertFormData);
+
+    // Auto-dismiss the popup after 3 seconds
+    setTimeout(() => {
+      setShowExpertToast(false);
+    }, 3000);
   };
 
   return (
@@ -151,6 +177,23 @@ export default function Contact() {
 
               <button type="submit" className="btn-gold-fill">SEND MESSAGE</button>
             </form>
+
+            {showLightToast && (
+              <>
+                <div className="form-toast-backdrop" />
+                <div className="form-toast" role="status">
+                  <span className="form-toast__icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div className="form-toast__text">
+                    <p className="form-toast__title">Message sent!</p>
+                    <p className="form-toast__desc">Our team will get back to you shortly.</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Right Column Sidebar */}
@@ -199,90 +242,95 @@ export default function Contact() {
           <h2>SPEAK TO A REAL ESTATE EXPERT</h2>
           <p className="expert-subtitle">RealState Clients gain personalized property advice</p>
 
-          {expertSubmitted ? (
-            <div className="expert-confirmation">
-              <div className="expert-confirmation__icon" aria-hidden="true">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              </div>
-              <h3>Request received, {expertFormData.firstName}!</h3>
-              <p>One of our real estate experts will reach out to you at {expertFormData.email || 'the email you provided'} soon.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleExpertSubmit} className="expert-form">
-              <div className="expert-row">
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name*"
-                  value={expertFormData.firstName}
-                  onChange={handleExpertChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last name*"
-                  value={expertFormData.lastName}
-                  onChange={handleExpertChange}
-                  required
-                />
-              </div>
-
+          <form onSubmit={handleExpertSubmit} className="expert-form">
+            <div className="expert-row">
               <input
-                type="email"
-                name="email"
-                placeholder="Your email address*"
-                value={expertFormData.email}
+                type="text"
+                name="firstName"
+                placeholder="First Name*"
+                value={expertFormData.firstName}
                 onChange={handleExpertChange}
                 required
               />
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last name*"
+                value={expertFormData.lastName}
+                onChange={handleExpertChange}
+                required
+              />
+            </div>
 
-              <div className="expert-phone-row">
-                <select disabled defaultValue="Philippines">
-                  <option value="Philippines">Philippines</option>
-                </select>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="+63"
-                  value={expertFormData.phone}
-                  onChange={handleExpertChange}
-                  required
-                />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email address*"
+              value={expertFormData.email}
+              onChange={handleExpertChange}
+              required
+            />
+
+            <div className="expert-phone-row">
+              <select disabled defaultValue="Philippines">
+                <option value="Philippines">Philippines</option>
+              </select>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="+63"
+                value={expertFormData.phone}
+                onChange={handleExpertChange}
+                required
+              />
+            </div>
+
+            <div className="expert-field">
+              <label>What would you like to do?</label>
+              <select
+                name="action"
+                value={expertFormData.action}
+                onChange={handleExpertChange}
+              >
+                <option value="" disabled>Please Select</option>
+                <option value="buy">Buy a New Property</option>
+                <option value="sell">Sell or Rent Out Property</option>
+                <option value="consult">Schedule Property Consultation</option>
+              </select>
+            </div>
+
+            <div className="expert-field">
+              <label>When is your preferred time to be contacted?</label>
+              <select
+                name="preferredTime"
+                value={expertFormData.preferredTime}
+                onChange={handleExpertChange}
+              >
+                <option value="" disabled>Please Select</option>
+                <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
+                <option value="afternoon">Afternoon (1:00 PM - 5:00 PM)</option>
+                <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
+              </select>
+            </div>
+
+            <button type="submit" className="btn-expert-action">REQUEST A CALL</button>
+          </form>
+
+          {showExpertToast && (
+            <>
+              <div className="form-toast-backdrop" />
+              <div className="form-toast" role="status">
+                <span className="form-toast__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </span>
+                <div className="form-toast__text">
+                  <p className="form-toast__title">Request received!</p>
+                  <p className="form-toast__desc">A real estate expert will contact you shortly.</p>
+                </div>
               </div>
-
-              <div className="expert-field">
-                <label>What would you like to do?</label>
-                <select
-                  name="action"
-                  value={expertFormData.action}
-                  onChange={handleExpertChange}
-                >
-                  <option value="" disabled>Please Select</option>
-                  <option value="buy">Buy a New Property</option>
-                  <option value="sell">Sell or Rent Out Property</option>
-                  <option value="consult">Schedule Property Consultation</option>
-                </select>
-              </div>
-
-              <div className="expert-field">
-                <label>When is your preferred time to be contacted?</label>
-                <select
-                  name="preferredTime"
-                  value={expertFormData.preferredTime}
-                  onChange={handleExpertChange}
-                >
-                  <option value="" disabled>Please Select</option>
-                  <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
-                  <option value="afternoon">Afternoon (1:00 PM - 5:00 PM)</option>
-                  <option value="evening">Evening (5:00 PM - 8:00 PM)</option>
-                </select>
-              </div>
-
-              <button type="submit" className="btn-expert-action">REQUEST A CALL</button>
-            </form>
+            </>
           )}
 
           <div className="expert-socials">

@@ -298,42 +298,113 @@
   gap: 16px;
 }
 
-.expert-confirmation {
-  width: 100%;
+/* Popup toast shown after a form is submitted — centered modal-style,
+   with a dim backdrop, sits for ~3s, then auto-dismisses (JS side removes
+   it from the DOM after the timeout; the fade-out animation covers the
+   last bit of that window). */
+.form-toast-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background-color: rgba(32, 27, 23, 0.55);
+  animation: form-toast-backdrop-in 0.35s ease forwards,
+             form-toast-backdrop-out 0.35s ease 2.65s forwards;
+}
+
+.form-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  width: min(440px, 88vw);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
-  padding: 36px 24px;
-  background-color: var(--color-bg-alt);
+  gap: 14px;
+  padding: 40px 36px;
+  background-color: var(--color-white);
   border: 1px solid var(--color-accent-soft);
-  border-radius: var(--radius-md);
+  border-top: 5px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  animation: form-toast-in 0.35s ease forwards,
+             form-toast-out 0.35s ease 2.65s forwards;
 }
 
-.expert-confirmation__icon {
-  width: 52px;
-  height: 52px;
+.form-toast__icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background-color: var(--color-accent);
-  color: var(--color-bg);
-  margin-bottom: 4px;
+  color: var(--color-white);
 }
 
-.expert-confirmation h3 {
-  color: var(--color-accent);
-  font-size: 18px;
-  letter-spacing: 0.5px;
+.form-toast__icon svg {
+  width: 26px;
+  height: 26px;
 }
 
-.expert-confirmation p {
+.form-toast__text {
+  min-width: 0;
+}
+
+.form-toast__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 8px;
+}
+
+.form-toast__desc {
+  font-size: 15px;
   color: var(--color-ink-muted);
-  font-size: 14px;
   line-height: 1.6;
-  max-width: 340px;
+  margin: 0;
+}
+
+@keyframes form-toast-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes form-toast-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes form-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes form-toast-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-toast {
+    width: 90vw;
+    padding: 32px 24px;
+  }
 }
 
 .expert-row {

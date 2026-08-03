@@ -13,6 +13,7 @@ import List from './pages/List.jsx'
 import Profile from './pages/Profile.jsx'
 import Messages from './pages/Messages.jsx'
 import Notifications from './pages/Notifications.jsx'
+import PropertyDetails from './pages/PropertyDetails.jsx'
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         />
         <Route path="/book-viewing" element={<BookViewing />} />
         <Route path="/all-listing" element={<AllListing />} />
+        <Route path="/property/:id" element={<PropertyDetails />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/list-property" element={<List />} />
         <Route
