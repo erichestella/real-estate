@@ -200,8 +200,9 @@
 }
 
 .property-details__image {
-  width: 260px;
-  height: 200px;
+  width: 35%;
+  height: auto;
+  aspect-ratio: 4 / 3;
   flex-shrink: 0;
   object-fit: cover;
   border-radius: var(--radius-md);
