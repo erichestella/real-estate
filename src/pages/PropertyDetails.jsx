@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import properties from '../data/properties.js'
@@ -45,7 +46,34 @@ const RulerIcon = () => (
 function PropertyDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const property = properties.find((p) => p.id === id)
+
+  // React Router keeps the browser's scroll position on navigation, which
+  // left this page scrolled down when opened from further down another
+  // page (e.g. the featured grid or the map). Jump to the top whenever the
+  // listing shown here changes.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [id])
+
+  // Where the user came from: Featured Properties on the main page ("/")
+  // or the All Listing map page ("/all-listing"). Falls back to browser
+  // history if the page was opened directly (e.g. a shared link/refresh).
+  const fromPath = location.state?.from
+  const backLabel =
+    fromPath === '/all-listing'
+      ? 'Back to All Listing'
+      : fromPath === '/'
+        ? 'Back to Home'
+        : 'Back to Listings'
+  const goBack = () => {
+    if (fromPath) {
+      navigate(fromPath)
+    } else {
+      navigate(-1)
+    }
+  }
 
   if (!property) {
     return (
@@ -70,8 +98,8 @@ function PropertyDetails() {
 
       <section className="property-page">
         <div className="container">
-          <button type="button" className="property-page__back-btn" onClick={() => navigate(-1)}>
-            &larr; Back to Listings
+          <button type="button" className="property-page__back-btn" onClick={goBack}>
+            &larr; {backLabel}
           </button>
 
           <div className="property-page__grid">

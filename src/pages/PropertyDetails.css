@@ -36,7 +36,7 @@
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 40px;
-  align-items: start;
+  align-items: stretch;
   background-color: var(--color-white);
   border: 1px solid var(--color-accent-soft);
   border-radius: var(--radius-lg);
@@ -46,11 +46,13 @@
 
 .property-page__image-wrap {
   width: 100%;
+  height: 100%;
 }
 
 .property-page__image {
   width: 100%;
-  height: 420px;
+  height: 100%;
+  min-height: 420px;
   object-fit: cover;
   border-radius: var(--radius-md);
   display: block;

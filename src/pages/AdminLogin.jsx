@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext.jsx'
+import logo from '../assets/logo.png'
 import '../pages/Auth.css'
 import './AdminLogin.css'
 
@@ -31,7 +32,7 @@ function AdminLogin() {
     <div className="auth-page-wrapper admin-login-wrapper">
       <header className="admin-login-topbar">
         <Link to="/" className="admin-login-topbar__brand">
-          <i className="fa-solid fa-building" aria-hidden="true"></i>
+          <img src={logo} alt="Your RealState logo" className="admin-login-topbar__logo" />
           Your RealState
         </Link>
         <span className="admin-login-topbar__tag">Admin Console</span>
@@ -42,7 +43,7 @@ function AdminLogin() {
           <h1 className="auth-card__brand">Admin Access</h1>
 
           <form className="auth-form" onSubmit={handleSubmit}>
-            <label htmlFor="admin-identifier">Admin Username / Email</label>
+            <label htmlFor="admin-identifier">Admin Username or Email</label>
             <input
               id="admin-identifier"
               type="text"
@@ -57,7 +58,7 @@ function AdminLogin() {
             <input
               id="admin-password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="●●●●●●●"
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -67,13 +68,13 @@ function AdminLogin() {
             {error && <p className="admin-login-card__error"><i className="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {error}</p>}
 
             <button type="submit" className="auth-form__submit">
-              <i className="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Login to Admin
+               Login to Admin
             </button>
           </form>
 
-          <p className="auth-card__footer">
+          {/* <p className="auth-card__footer">
             Not an admin? <Link to="/login">Go to member login</Link>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

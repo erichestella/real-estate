@@ -2,6 +2,25 @@
 // and PropertyDetails (full details page, looked up by id via the URL).
 const properties = [
   {
+    id: 'YR-12238',
+    title: '2-Bedroom House and Lot, Buenaventura Subdivision',
+    location: 'Buenaventura Subdivision',
+    price: '₱123,567,902.05',
+    beds: 2,
+    baths: 2,
+    garage: 4,
+    sqm: '796 SQM',
+    status: 'AVAILABLE',
+    image: 'https://i.pinimg.com/1200x/0c/46/79/0c4679231cce2def3ec84134ee295b9a.jpg',
+    address: '1223 St., Buenaventura Subdivision',
+    description: '2-bedroom, 2-toilet & bath home with a 4-car garage, situated in a quiet subdivision.',
+    lister: {
+      name: 'Ms. Maria C. Dela Cruz',
+      phone: '0949392292',
+      email: 'mariacdc@gmail.com',
+    },
+  },
+  {
     id: 'YR-73160',
     title: '2,228 SQM Commercial Property for Sale along Roxas Boulevard, Parañaque',
     location: 'Parañaque',

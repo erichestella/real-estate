@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom'
+import logo from '../assets/logo.png'
 import './Navbar.css'
 
 function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar__inner">
-        <Link to="/" className="navbar__brand">Your RealState</Link>
+        <Link to="/" className="navbar__brand">
+          <img src={logo} alt="Your RealState logo" className="navbar__logo" />
+          Your RealState
+        </Link>
 
         <nav className="navbar__links">
           <Link to="/">Home</Link>

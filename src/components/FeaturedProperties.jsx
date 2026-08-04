@@ -30,7 +30,7 @@ function FeaturedProperties() {
   const navigate = useNavigate()
 
   const goToProperty = (id) => {
-    navigate(`/property/${id}`)
+    navigate(`/property/${id}`, { state: { from: '/' } })
   }
 
   return (

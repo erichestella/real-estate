@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext.jsx'
+import logo from '../assets/logo.png'
 import './AdminNav.css'
 
 const NAV_ITEMS = [
@@ -23,7 +24,7 @@ function AdminNav() {
     <header className="admin-nav">
       <div className="admin-nav__inner">
         <Link to="/admin" className="admin-nav__brand">
-          <i className="fa-solid fa-building admin-nav__brand-icon" aria-hidden="true"></i>
+          <img src={logo} alt="Your RealState logo" className="admin-nav__brand-icon" />
           Your RealState <span>— Admin</span>
         </Link>
 

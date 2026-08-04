@@ -32,8 +32,10 @@
 }
 
 .admin-nav__brand-icon {
-  color: var(--color-accent-soft);
-  font-size: 0.95rem;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .admin-nav__links {

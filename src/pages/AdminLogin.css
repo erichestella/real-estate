@@ -25,6 +25,13 @@
   color: var(--color-bg);
 }
 
+.admin-login-topbar__logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .admin-login-topbar__tag {
   font-size: 0.78rem;
   letter-spacing: 0.06em;

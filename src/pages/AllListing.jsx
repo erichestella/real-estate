@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import './AllListing.css'
@@ -165,8 +166,11 @@ function loadLeaflet() {
 function Maps() {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
-  const detailsRef = useRef(null)
-  const [activeProperty, setActiveProperty] = useState(null)
+  const navigate = useNavigate()
+
+  const goToProperty = (id) => {
+    navigate(`/property/${id}`, { state: { from: '/all-listing' } })
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -217,11 +221,12 @@ function Maps() {
           .bindPopup(popupHtml, { maxWidth: 240 })
 
         // The popup is raw HTML injected by Leaflet (not React), so we wire
-        // the button's click after each popup open to trigger React state.
+        // the button's click after each popup open to navigate to the
+        // full Property Details page.
         marker.on('popupopen', (e) => {
           const btn = e.popup.getElement()?.querySelector('.map-popup__btn')
           if (btn) {
-            btn.addEventListener('click', () => setActiveProperty(property))
+            btn.addEventListener('click', () => goToProperty(property.id))
           }
         })
       })
@@ -237,12 +242,6 @@ function Maps() {
       }
     }
   }, [])
-
-  useEffect(() => {
-    if (activeProperty && detailsRef.current) {
-      detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, [activeProperty])
 
   return (
     <div>
@@ -267,79 +266,6 @@ function Maps() {
           <div className="maps-page__map-frame">
             <div className="maps-page__map" ref={mapContainerRef} />
           </div>
-
-          {activeProperty && (
-            <div className="property-details" ref={detailsRef}>
-              {/* <button
-                type="button"
-                className="property-details__close"
-                aria-label="Close details"
-                onClick={() => setActiveProperty(null)}
-              >
-                ×
-              </button> */}
-              <img
-                src={activeProperty.image}
-                alt={activeProperty.name}
-                className="property-details__image"
-              />
-              <div className="property-details__body">
-                <p className="property-details__id">Listing ID: {activeProperty.id}</p>
-                <h2 className="property-details__price">{activeProperty.price}</h2>
-                <h3 className="property-details__name">{activeProperty.name}</h3>
-                {activeProperty.address && (
-                  <p className="property-details__address">{activeProperty.address}</p>
-                )}
-
-                {(activeProperty.bedrooms || activeProperty.bathrooms || activeProperty.garage) && (
-                  <ul className="property-details__specs">
-                    {activeProperty.bedrooms && (
-                      <li>
-                        <i className="fa-solid fa-bed" aria-hidden="true" />
-                        {activeProperty.bedrooms} Bedroom{activeProperty.bedrooms > 1 ? 's' : ''}
-                      </li>
-                    )}
-                    {activeProperty.bathrooms && (
-                      <li>
-                        <i className="fa-solid fa-sink" aria-hidden="true" />
-                        {activeProperty.bathrooms} Bathroom{activeProperty.bathrooms > 1 ? 's' : ''}
-                      </li>
-                    )}
-                    {activeProperty.garage && (
-                      <li>
-                        <i className="fa-solid fa-warehouse" aria-hidden="true" />
-                        {activeProperty.garage}-Car Garage
-                      </li>
-                    )}
-                    <li>
-                      <i className="fa-solid fa-ruler-combined" aria-hidden="true" />
-                      {activeProperty.sqm}
-                    </li>
-                  </ul>
-                )}
-
-                <p className="property-details__desc">{activeProperty.description}</p>
-                <p className="property-details__coords">
-                  Coordinates: {activeProperty.lat}, {activeProperty.lng}
-                </p>
-
-                {activeProperty.lister && (
-                  <div className="property-details__lister">
-                    <p className="property-details__lister-label">Listed by</p>
-                    <p className="property-details__lister-name">{activeProperty.lister.name}</p>
-                    <p className="property-details__lister-contact">
-                      <i className="fa-solid fa-phone" aria-hidden="true" />
-                      {activeProperty.lister.phone}
-                    </p>
-                    <p className="property-details__lister-contact">
-                      <i className="fa-solid fa-envelope" aria-hidden="true" />
-                      {activeProperty.lister.email}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* <div className="maps-page__tile">
             <h3>How to read the map</h3>
