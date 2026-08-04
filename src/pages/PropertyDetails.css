@@ -119,12 +119,17 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-accent);
-  background-color: var(--color-bg);
-  padding: 6px 12px;
+  color: var(--color-ink);
+  padding: 6px 14px;
   border-radius: 999px;
   margin: 0 0 18px;
 }
+
+/* Same For Sale / For Rent / Sold Out categories used in the Admin
+   listing cards, so the status reads consistently everywhere. */
+.property-page__status--forsale { background-color: #DDEAD9; }
+.property-page__status--forrent { background-color: #D9E4EF; }
+.property-page__status--soldout { background-color: #E7D9D9; }
 
 .property-page__desc {
   font-size: 0.95rem;

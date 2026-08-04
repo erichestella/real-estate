@@ -139,7 +139,13 @@ function PropertyDetails() {
               </ul>
 
               {property.status && (
-                <p className="property-page__status">{property.status}</p>
+                <p
+                  className={`property-page__status property-page__status--${property.status
+                    .replace(/\s/g, '')
+                    .toLowerCase()}`}
+                >
+                  {property.status}
+                </p>
               )}
 
               {property.description && (

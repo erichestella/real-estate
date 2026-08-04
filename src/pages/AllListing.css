@@ -83,6 +83,18 @@
   max-width: 720px;
 }
 
+.maps-page__listings {
+  margin-top: 56px;
+}
+
+.maps-page__listings-title {
+  text-align: center;
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
 /* Leaflet popup content */
 .map-popup {
   width: 200px;
