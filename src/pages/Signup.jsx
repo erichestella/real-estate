@@ -38,10 +38,10 @@ function Signup() {
 
             {/* <span className="auth-form__section">Password</span> */}
             <label htmlFor="password">Password *</label>
-            <input id="password" type="password" placeholder="Create a password" autoComplete="new-password" required />
+            <input id="password" type="password" placeholder="●●●●●●●" autoComplete="new-password" required />
 
             <label htmlFor="password">Confirm Password *</label>
-            <input id="password" type="password" placeholder="Create a password" autoComplete="new-password" required />
+            <input id="password" type="password" placeholder="●●●●●●●" autoComplete="new-password" required />
 
             <button type="submit" className="auth-form__submit">Sign Up </button>
           </form>

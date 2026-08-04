@@ -41,8 +41,6 @@ function AdminLogin() {
         <div className="auth-card admin-login-card">
           <h1 className="auth-card__brand">Admin Access</h1>
 
-          <p className="auth-card__intro">Sign in to manage listings, messages, and system settings.</p>
-
           <form className="auth-form" onSubmit={handleSubmit}>
             <label htmlFor="admin-identifier">Admin Username / Email</label>
             <input

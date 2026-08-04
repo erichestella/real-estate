@@ -19,7 +19,7 @@ function Login() {
             <input id="identifier" type="text" placeholder="Enter your username or email" autoComplete="username" required />
 
             <label htmlFor="password">Password</label>
-            <input id="password" type="password" placeholder="Enter your password" autoComplete="current-password" required />
+            <input id="password" type="password" placeholder="●●●●●●●" autoComplete="current-password" required />
 
             <Link to="/forgot-password" className="auth-form__forgot">Forgot Password?</Link>
 
