@@ -84,11 +84,17 @@
   overflow: hidden;
   box-shadow: var(--shadow-soft);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .admin-listing-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 34px rgba(43, 37, 33, 0.14);
+}
+
+.admin-listing-card:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* Shopee/Lazada-style square product image with a floating status badge */
@@ -169,8 +175,7 @@
 
 .status-pill--forsale { background-color: #DDEAD9; }
 .status-pill--forrent { background-color: #D9E4EF; }
-.status-pill--pending { background-color: #F1E4C7; }
-.status-pill--sold { background-color: #E7D9D9; }
+.status-pill--soldout { background-color: #E7D9D9; }
 
 .admin-listing-card__posted {
   display: inline-flex;
@@ -192,5 +197,248 @@
   }
   .admin-sort {
     justify-content: flex-start;
+  }
+}
+
+/* Slide-in details / edit panel, opened by clicking a listing card */
+.admin-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  visibility: hidden;
+  pointer-events: none;
+  /* Delay hiding until the slide-out/fade-out transitions below finish,
+     otherwise the panel disappears instantly instead of sliding back. */
+  transition: visibility 0s linear 0.3s;
+}
+
+.admin-drawer.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
+.admin-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(32, 27, 23, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.admin-drawer.is-open .admin-drawer__backdrop {
+  opacity: 1;
+}
+
+.admin-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(550px, 100%);
+  background-color: var(--color-white);
+  box-shadow: -16px 0 40px rgba(43, 37, 33, 0.22);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.admin-drawer.is-open .admin-drawer__panel {
+  transform: translateX(0);
+}
+
+.admin-drawer__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-bg-alt);
+}
+
+.admin-drawer__id {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.admin-drawer__header h2 {
+  font-size: 1.15rem;
+  margin: 4px 0 0;
+}
+
+.admin-drawer__close {
+  border: none;
+  background-color: var(--color-bg-alt);
+  color: var(--color-ink);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease;
+}
+
+.admin-drawer__close:hover {
+  background-color: var(--color-accent-soft);
+}
+
+.admin-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 24px;
+}
+
+.admin-drawer__image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.admin-drawer__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-drawer__image .status-pill {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.admin-drawer__field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.admin-drawer__field span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 6px;
+}
+
+.admin-drawer__field input,
+.admin-drawer__field select,
+.admin-drawer__field textarea {
+  width: 100%;
+  border: 1px solid var(--color-accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-white);
+}
+
+.admin-drawer__field input:focus,
+.admin-drawer__field select:focus,
+.admin-drawer__field textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.admin-drawer__field textarea {
+  resize: vertical;
+}
+
+.admin-drawer__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.admin-drawer__row--four {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.admin-drawer__lister {
+  margin-top: 8px;
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.admin-drawer__lister-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 4px;
+}
+
+.admin-drawer__lister-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 6px;
+}
+
+.admin-drawer__lister-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-ink-muted);
+  margin: 0 0 4px;
+}
+
+.admin-drawer__lister-contact i {
+  color: var(--color-accent);
+  width: 14px;
+}
+
+.admin-drawer__footer {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-bg-alt);
+}
+
+.admin-drawer__cancel,
+.admin-drawer__save {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 16px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-drawer__cancel {
+  background-color: var(--color-bg-alt);
+  color: var(--color-ink);
+}
+
+.admin-drawer__cancel:hover {
+  background-color: var(--color-accent-soft);
+}
+
+.admin-drawer__save {
+  background-color: var(--color-header-dark);
+  color: var(--color-bg);
+}
+
+.admin-drawer__save:hover {
+  background-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+@media (max-width: 520px) {
+  .admin-drawer__row--four {
+    grid-template-columns: 1fr 1fr;
   }
 }

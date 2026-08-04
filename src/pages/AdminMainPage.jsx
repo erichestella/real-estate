@@ -1,90 +1,85 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AdminNav from '../components/AdminNav.jsx'
 import AdminFooter from '../components/AdminFooter.jsx'
+import properties from '../data/properties.js'
 import './AdminMainPage.css'
 
-// TODO: swap out with real listings from the backend/db once ready.
-// Random/placeholder properties added first, Shopee/Lazada-style card layout:
-// picture -> title -> price -> description (sqm, location).
-const listings = [
-  {
-    id: 'YR-1042',
-    title: 'Modern Family Home with Landscaped Garden',
-    image: 'https://i.pinimg.com/736x/db/ab/5e/dbab5e951d006c664c4578fd9a26c54e.jpg',
-    location: 'Quezon City',
-    sqm: 180,
-    price: 8500000,
-    status: 'For Sale',
-    postedBy: 'J. Santos',
-  },
-  {
-    id: 'YR-1077',
-    title: 'Riverside Townhouse, 3BR Corner Unit',
-    image: 'https://i.pinimg.com/736x/35/a0/60/35a0605cb34797410b3aa68118b82b51.jpg',
-    location: 'Pasig',
-    sqm: 120,
-    price: 6200000,
-    status: 'For Rent',
-    postedBy: 'M. Cruz',
-  },
-  {
-    id: 'YR-1103',
-    title: 'Skyline Condo Unit with Balcony View',
-    image: 'https://i.pinimg.com/1200x/ee/b3/07/eeb307b4d32be27279a8136a7d7893c3.jpg',
-    location: 'Taguig',
-    sqm: 45,
-    price: 4750000,
-    status: 'Pending',
-    postedBy: 'A. Reyes',
-  },
-  {
-    id: 'YR-1129',
-    title: 'Garden Bungalow near Marikina River Park',
-    image: 'https://i.pinimg.com/1200x/2a/fe/e6/2afee6d5bcb47c9026d1f5b3d138adcd.jpg',
-    location: 'Marikina',
-    sqm: 150,
-    price: 5900000,
-    status: 'For Sale',
-    postedBy: 'J. Santos',
-  },
-  {
-    id: 'YR-1156',
-    title: 'Downtown Loft, Fully Furnished',
-    image: 'https://i.pinimg.com/736x/07/3a/21/073a21ca95dd8aecda123fd1b0c5e25c.jpg',
-    location: 'Makati',
-    sqm: 60,
-    price: 7300000,
-    status: 'Sold',
-    postedBy: 'K. Bautista',
-  },
-  {
-    id: 'YR-1188',
-    title: 'Cozy Studio Unit Near Transit Hub',
-    image: 'https://i.pinimg.com/736x/4a/ea/9a/4aea9a9666cfe6ddab9c5c61765dd733.jpg',
-    location: 'Quezon City',
-    sqm: 28,
-    price: 2450000,
-    status: 'For Rent',
-    postedBy: 'A. Reyes',
-  },
-]
-
-const peso = new Intl.NumberFormat('en-PH', {
-  style: 'currency',
-  currency: 'PHP',
-  maximumFractionDigits: 0,
-})
+// Same shared listings data used by Featured Properties (main page) and
+// All Listing, so the pictures/info here always match what's shown
+// publicly — just displayed in the admin's own Shopee/Lazada-style card.
+const statusSlug = (status) => status.replace(/\s/g, '').toLowerCase()
 
 function AdminMainPage() {
   const [status, setStatus] = useState('')
   const [location, setLocation] = useState('')
   const [postedBy, setPostedBy] = useState('')
+  const [selected, setSelected] = useState(null)
+  const [form, setForm] = useState(null)
+  const [isOpen, setIsOpen] = useState(false)
 
-  const filtered = listings.filter((item) =>
+  const statusOptions = [...new Set(properties.map((item) => item.status))]
+  const locationOptions = [...new Set(properties.map((item) => item.location))]
+  const postedByOptions = [...new Set(properties.map((item) => item.lister?.name).filter(Boolean))]
+
+  const filtered = properties.filter((item) =>
     (status ? item.status === status : true) &&
     (location ? item.location === location : true) &&
-    (postedBy ? item.postedBy === postedBy : true)
+    (postedBy ? item.lister?.name === postedBy : true)
   )
+
+  const openPanel = (property) => {
+    setSelected(property)
+    setForm({
+      title: property.title,
+      price: property.price,
+      status: property.status,
+      location: property.location,
+      sqm: property.sqm,
+      beds: property.beds ?? '',
+      baths: property.baths ?? '',
+      garage: property.garage ?? '',
+      description: property.description ?? '',
+    })
+    setIsOpen(true)
+  }
+
+  // Only toggle the open flag here — keep `selected`/`form` around so the
+  // panel still has its content to show while it slides back out. They're
+  // cleared once the slide-out transition actually finishes (see below).
+  const closePanel = () => {
+    setIsOpen(false)
+  }
+
+  const handleFieldChange = (field) => (e) => {
+    const { value } = e.target
+    setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  // Close on Escape, and stop the page from scrolling behind the drawer.
+  useEffect(() => {
+    if (!isOpen) return
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') closePanel()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
+  // Clear the selected listing only once the slide-out transition on the
+  // panel has actually finished, instead of the instant "is-open" is off.
+  const handlePanelTransitionEnd = (e) => {
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform') return
+    if (!isOpen) {
+      setSelected(null)
+      setForm(null)
+    }
+  }
 
   return (
     <div className="admin">
@@ -106,10 +101,9 @@ function AdminMainPage() {
             <label htmlFor="sortStatus">Status</label>
             <select id="sortStatus" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="">All</option>
-              <option>For Sale</option>
-              <option>For Rent</option>
-              <option>Pending</option>
-              <option>Sold</option>
+              {statusOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
             </select>
           </div>
 
@@ -117,11 +111,9 @@ function AdminMainPage() {
             <label htmlFor="sortLocation">Location</label>
             <select id="sortLocation" value={location} onChange={(e) => setLocation(e.target.value)}>
               <option value="">All</option>
-              <option>Quezon City</option>
-              <option>Pasig</option>
-              <option>Taguig</option>
-              <option>Marikina</option>
-              <option>Makati</option>
+              {locationOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
             </select>
           </div>
 
@@ -129,31 +121,42 @@ function AdminMainPage() {
             <label htmlFor="sortPostedBy">Posted By</label>
             <select id="sortPostedBy" value={postedBy} onChange={(e) => setPostedBy(e.target.value)}>
               <option value="">All</option>
-              <option>J. Santos</option>
-              <option>M. Cruz</option>
-              <option>A. Reyes</option>
-              <option>K. Bautista</option>
+              {postedByOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
             </select>
           </div>
         </div>
 
         <div className="admin-listing-grid">
           {filtered.map((item) => (
-            <article className="admin-listing-card" key={item.id}>
+            <article
+              className="admin-listing-card"
+              key={item.id}
+              onClick={() => openPanel(item)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  openPanel(item)
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
               <div className="admin-listing-card__image">
                 <img src={item.image} alt={item.title} loading="lazy" />
-                <span className={`status-pill status-pill--${item.status.replace(/\s/g, '').toLowerCase()}`}>
+                <span className={`status-pill status-pill--${statusSlug(item.status)}`}>
                   {item.status}
                 </span>
               </div>
               <div className="admin-listing-card__body">
                 <span className="admin-listing-card__id">{item.id}</span>
                 <h3>{item.title}</h3>
-                <p className="admin-listing-card__price">{peso.format(item.price)}</p>
-                <p className="admin-listing-card__desc">{item.location} · {item.sqm} sqm</p>
+                <p className="admin-listing-card__price">₱ {item.price.replace('₱', '')}</p>
+                <p className="admin-listing-card__desc">{item.location} · {item.sqm}</p>
                 <div className="admin-listing-card__footer">
                   <span className="admin-listing-card__posted">
-                    <i className="fa-regular fa-user" aria-hidden="true"></i> Posted by {item.postedBy}
+                    <i className="fa-regular fa-user" aria-hidden="true"></i> Posted by {item.lister?.name}
                   </span>
                 </div>
               </div>
@@ -164,6 +167,112 @@ function AdminMainPage() {
       </main>
 
       <AdminFooter />
+
+      {/* Slide-in panel: click a card above to view + edit its full info
+          without leaving the All Listing page. */}
+      <div className={`admin-drawer ${isOpen ? 'is-open' : ''}`} aria-hidden={!isOpen}>
+        <div className="admin-drawer__backdrop" onClick={closePanel} />
+
+        <div className="admin-drawer__panel" onTransitionEnd={handlePanelTransitionEnd}>
+          {selected && form && (
+            <>
+              <div className="admin-drawer__header">
+                <div>
+                  <span className="admin-drawer__id">{selected.id}</span>
+                  <h2>Edit Listing</h2>
+                </div>
+                <button type="button" className="admin-drawer__close" onClick={closePanel} aria-label="Close panel">
+                  <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+              </div>
+
+              <div className="admin-drawer__body">
+                <div className="admin-drawer__image">
+                  <img src={selected.image} alt={selected.title} />
+                  <span className={`status-pill status-pill--${statusSlug(form.status)}`}>
+                    {form.status}
+                  </span>
+                </div>
+
+                <label className="admin-drawer__field">
+                  <span>Title</span>
+                  <input type="text" value={form.title} onChange={handleFieldChange('title')} />
+                </label>
+
+                <div className="admin-drawer__row">
+                  <label className="admin-drawer__field">
+                    <span>Price</span>
+                    <input type="text" value={form.price} onChange={handleFieldChange('price')} />
+                  </label>
+                  <label className="admin-drawer__field">
+                    <span>Status</span>
+                    <select value={form.status} onChange={handleFieldChange('status')}>
+                      <option>For Sale</option>
+                      <option>For Rent</option>
+                      <option>Sold Out</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label className="admin-drawer__field">
+                  <span>Location</span>
+                  <input type="text" value={form.location} onChange={handleFieldChange('location')} />
+                </label>
+
+                <div className="admin-drawer__row admin-drawer__row--four">
+                  <label className="admin-drawer__field">
+                    <span>SQM</span>
+                    <input type="text" value={form.sqm} onChange={handleFieldChange('sqm')} />
+                  </label>
+                  <label className="admin-drawer__field">
+                    <span>Beds</span>
+                    <input type="number" min="0" value={form.beds} onChange={handleFieldChange('beds')} />
+                  </label>
+                  <label className="admin-drawer__field">
+                    <span>Baths</span>
+                    <input type="number" min="0" value={form.baths} onChange={handleFieldChange('baths')} />
+                  </label>
+                  <label className="admin-drawer__field">
+                    <span>Garage</span>
+                    <input type="number" min="0" value={form.garage} onChange={handleFieldChange('garage')} />
+                  </label>
+                </div>
+
+                <label className="admin-drawer__field">
+                  <span>Description</span>
+                  <textarea rows={4} value={form.description} onChange={handleFieldChange('description')} />
+                </label>
+
+                {selected.lister && (
+                  <div className="admin-drawer__lister">
+                    <p className="admin-drawer__lister-label">Listed by</p>
+                    <p className="admin-drawer__lister-name">{selected.lister.name}</p>
+                    {selected.lister.phone && (
+                      <p className="admin-drawer__lister-contact">
+                        <i className="fa-solid fa-phone" aria-hidden="true"></i> {selected.lister.phone}
+                      </p>
+                    )}
+                    {selected.lister.email && (
+                      <p className="admin-drawer__lister-contact">
+                        <i className="fa-solid fa-envelope" aria-hidden="true"></i> {selected.lister.email}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="admin-drawer__footer">
+                <button type="button" className="admin-drawer__cancel" onClick={closePanel}>
+                  Cancel
+                </button>
+                <button type="button" className="admin-drawer__save" onClick={closePanel}>
+                  Save Changes
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
