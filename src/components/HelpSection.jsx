@@ -1,10 +1,11 @@
+import { Link } from 'react-router-dom'
 import './HelpSection.css'
 
 const options = [
-  { title: 'Buying a home', desc: 'Get matched with listings that fit your budget and lifestyle.', cta: 'Go here' },
-  { title: 'Selling a property', desc: 'List with us and reach verified, ready-to-move buyers.', cta: 'Go Here' },
-  { title: 'Renting', desc: 'Find a place to move into, from studios to family homes.', cta: 'Go Here' },
-  { title: 'Talk to an agent', desc: 'Book a call with a Your RealState broker for guidance.', cta: 'Go Here' },
+  { title: 'Buying a home', desc: 'Get matched with listings that fit your budget and lifestyle.', cta: 'Go here', to: '/all-listing' },
+  { title: 'Selling a property', desc: 'List with us and reach verified, ready-to-move buyers.', cta: 'Go Here', to: '/list-property' },
+  { title: 'Renting', desc: 'Find a place to move into, from studios to family homes.', cta: 'Go Here', to: '/all-listing' },
+  { title: 'Talk to an agent', desc: 'Book a call with a Your RealState broker for guidance.', cta: 'Go Here', to: '/contact#talk-to-agent' },
 ]
 
 const icons = {
@@ -50,7 +51,7 @@ function HelpSection() {
             <div className="help-card__icon">{icons[opt.title]}</div>
             <h3>{opt.title}</h3>
             <p>{opt.desc}</p>
-            <button type="button" className="help-card__cta">{opt.cta}</button>
+            <Link to={opt.to} className="help-card__cta">{opt.cta}</Link>
           </div>
         ))}
       </div>

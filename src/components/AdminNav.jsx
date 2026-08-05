@@ -25,7 +25,7 @@ function AdminNav() {
       <div className="admin-nav__inner">
         <Link to="/admin" className="admin-nav__brand">
           <img src={logo} alt="Your RealState logo" className="admin-nav__brand-icon" />
-          Your RealState <span>— Admin</span>
+          Your RealEstate <span>— Admin</span>
         </Link>
 
         <nav className="admin-nav__links">

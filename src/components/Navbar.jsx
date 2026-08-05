@@ -8,7 +8,7 @@ function Navbar() {
       <div className="container navbar__inner">
         <Link to="/" className="navbar__brand">
           <img src={logo} alt="Your RealState logo" className="navbar__logo" />
-          Your RealState
+          Your RealEstate
         </Link>
 
         <nav className="navbar__links">

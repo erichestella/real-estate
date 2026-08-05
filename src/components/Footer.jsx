@@ -5,7 +5,7 @@ function Footer() {
     <footer className="footer">
       <div className="container footer__inner">
         <div>
-          <h4 className="footer__brand">Your RealState</h4>
+          <h4 className="footer__brand">Your RealEstate</h4>
           <p>Find your next home through a trusted, reliable brokerage.</p>
         </div>
 
