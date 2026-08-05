@@ -243,6 +243,121 @@
   transition: background-color 9999s ease-in-out 0s;
 }
 
+.book-viewing__input--error {
+  border-color: #c0392b !important;
+}
+
+.book-viewing__error-text {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: #c0392b;
+}
+
+/* Popup toast shown after a successful submission — centered modal-style,
+   with a dim backdrop, sits for ~3s, then auto-dismisses (JS side removes
+   it from the DOM after the timeout; the fade-out animation covers the
+   last bit of that window). */
+.book-viewing__toast-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  background-color: rgba(32, 27, 23, 0.55);
+  animation: book-viewing-toast-backdrop-in 0.35s ease forwards,
+             book-viewing-toast-backdrop-out 0.35s ease 2.65s forwards;
+}
+
+.book-viewing__toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  width: min(440px, 88vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 40px 36px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-accent-soft);
+  border-top: 5px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  animation: book-viewing-toast-in 0.35s ease forwards,
+             book-viewing-toast-out 0.35s ease 2.65s forwards;
+}
+
+.book-viewing__toast-icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.book-viewing__toast-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.book-viewing__toast-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin: 0 0 8px;
+}
+
+.book-viewing__toast-desc {
+  font-size: 15px;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes book-viewing-toast-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes book-viewing-toast-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes book-viewing-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes book-viewing-toast-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+@media (max-width: 480px) {
+  .book-viewing__toast {
+    width: 90vw;
+    padding: 32px 24px;
+  }
+}
+
 .book-viewing__submit {
   align-self: flex-end;
   background-color: var(--color-ink);

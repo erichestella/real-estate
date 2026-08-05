@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import properties from '../data/properties.js'
@@ -169,6 +169,7 @@ function Maps() {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const goToProperty = (id) => {
     navigate(`/property/${id}`, { state: { from: '/all-listing' } })
@@ -245,6 +246,24 @@ function Maps() {
     }
   }, [])
 
+  // Lets a button elsewhere in the site (e.g. Help section's "Talk to an
+  // agent") link straight to /all-listing#all-properties and land scrolled
+  // to the cards grid, offset for the fixed navbar. React Router doesn't
+  // reset scroll position on navigation, so we always reset to the top
+  // first — otherwise leftover scroll from whatever page we came from
+  // gets added into the target's position and overshoots way past it.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+
+    if (!location.hash) return
+    const target = document.querySelector(location.hash)
+    if (!target) return
+
+    const navbarOffset = 90
+    const top = target.getBoundingClientRect().top - navbarOffset
+    window.scrollTo({ top, behavior: 'smooth' })
+  }, [location.hash])
+
   return (
     <div>
       <Navbar />
@@ -278,7 +297,7 @@ function Maps() {
             </p>
           </div> */}
 
-          <div className="maps-page__listings">
+          <div className="maps-page__listings" id="all-properties">
             <h2 className="maps-page__listings-title">All Properties</h2>
 
             <div className="featured__grid">

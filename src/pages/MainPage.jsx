@@ -23,7 +23,7 @@ function MainPage() {
         </div>
 
         <div className="container hero__inner">
-          <h1>Invest in your future.<br />Invest in Your RealState.</h1>
+          <h1>Invest in your future.<br />Invest in Your RealEstate.</h1>
           <p className="hero__subtitle">
             Find your next home in Metro Manila through a trusted and reliable real estate brokerage.
           </p>

@@ -92,6 +92,16 @@
   opacity: 0.7;
 }
 
+.auth-form__input--error {
+  border-color: #c0392b !important;
+}
+
+.auth-form__error-text {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #c0392b;
+}
+
 .auth-form__section {
   margin-top: 18px;
   font-family: var(--font-display);

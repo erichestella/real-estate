@@ -33,7 +33,7 @@ function AdminLogin() {
       <header className="admin-login-topbar">
         <Link to="/" className="admin-login-topbar__brand">
           <img src={logo} alt="Your RealState logo" className="admin-login-topbar__logo" />
-          Your RealState
+          Your RealEstate
         </Link>
         <span className="admin-login-topbar__tag">Admin Console</span>
       </header>

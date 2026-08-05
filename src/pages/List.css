@@ -191,6 +191,22 @@
   box-shadow: 0 0 0 3px rgba(201, 181, 156, 0.25);
 }
 
+.list-input--error {
+  border-color: #c0392b !important;
+}
+
+.list-error-text {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.upload-count {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-ink-muted);
+}
+
 /* Image Upload Dropzone Styles */
 .file-input-hidden {
   display: none;

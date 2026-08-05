@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import './List.css';
 
 export default function List() {
+  // React Router doesn't reset scroll position on navigation, so clicking
+  // "Selling a property" from further down another page (e.g. the Help
+  // section) would otherwise land here scrolled to that same leftover
+  // position instead of at the top of this page.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [])
+
   const initialFormData = {
     firstName: '',
     lastName: '',
@@ -17,33 +25,134 @@ export default function List() {
     wazeLink: '',
   };
 
+  const MAX_IMAGES = 10;
+
+  // Simple, standard email shape check: something@something.tld
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Accepts Google Maps links only: maps.google.com, google.com/maps,
+  // goo.gl/maps, or maps.app.goo.gl short links.
+  const googleMapsPattern = /^(https?:\/\/)?(www\.)?(maps\.google\.[a-z.]+|google\.[a-z.]+\/maps|goo\.gl\/maps|maps\.app\.goo\.gl)\/.+/i;
+
   const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
 
   const [images, setImages] = useState([]);
   const [showToast, setShowToast] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Phone number: digits only, strip anything else as the person types.
+    if (name === 'phoneNumber') {
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, phoneNumber: digitsOnly }));
+      if (errors.phoneNumber) setErrors(prev => ({ ...prev, phoneNumber: '' }));
+      return;
+    }
+
+    // Target price: digits only as well, no letters/symbols/commas.
+    if (name === 'targetPrice') {
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({ ...prev, targetPrice: digitsOnly }));
+      if (errors.targetPrice) setErrors(prev => ({ ...prev, targetPrice: '' }));
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map(file => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }));
-    setImages(prev => [...prev, ...newImages]);
+
+    setImages(prev => {
+      const remainingSlots = MAX_IMAGES - prev.length;
+
+      if (remainingSlots <= 0) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          images: `You can only upload up to ${MAX_IMAGES} photos.`,
+        }));
+        return prev;
+      }
+
+      const filesToAdd = files.slice(0, remainingSlots);
+      const newImages = filesToAdd.map(file => ({
+        file,
+        preview: URL.createObjectURL(file),
+      }));
+
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        images: files.length > remainingSlots
+          ? `Only ${MAX_IMAGES} photos allowed — the rest weren't added.`
+          : '',
+      }));
+
+      return [...prev, ...newImages];
+    });
+
+    // Allow re-selecting the same file again later
+    e.target.value = '';
   };
 
   const removeImage = (index) => {
     setImages(prev => prev.filter((_, i) => i !== index));
   };
 
+  const validate = () => {
+    const nextErrors = {};
+
+    if (!formData.firstName.trim()) nextErrors.firstName = 'First name is required.';
+    if (!formData.lastName.trim()) nextErrors.lastName = 'Last name is required.';
+
+    if (!formData.email.trim()) {
+      nextErrors.email = 'Email is required.';
+    } else if (!emailPattern.test(formData.email.trim())) {
+      nextErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!formData.phoneNumber.trim()) {
+      nextErrors.phoneNumber = 'Phone number is required.';
+    } else if (!/^\d{7,15}$/.test(formData.phoneNumber.trim())) {
+      nextErrors.phoneNumber = 'Enter a valid phone number (digits only).';
+    }
+
+    if (!formData.location) {
+      nextErrors.location = 'Please select a property location.';
+    }
+
+    if (!formData.targetPrice.trim()) {
+      nextErrors.targetPrice = 'Target selling price is required.';
+    } else if (!/^\d+$/.test(formData.targetPrice.trim())) {
+      nextErrors.targetPrice = 'Numbers only, please.';
+    }
+
+    if (formData.wazeLink.trim() && !googleMapsPattern.test(formData.wazeLink.trim())) {
+      nextErrors.wazeLink = 'Please paste a valid Google Maps link.';
+    }
+
+    if (images.length === 0) {
+      nextErrors.images = 'Please upload at least one property photo.';
+    } else if (images.length > MAX_IMAGES) {
+      nextErrors.images = `You can only upload up to ${MAX_IMAGES} photos.`;
+    }
+
+    return nextErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     // Show the popup, then clear all the form fields
+    setErrors({});
     setShowToast(true);
     setFormData(initialFormData);
     setImages([]);
@@ -72,7 +181,7 @@ export default function List() {
           <p>Share a few details below so our real estate brokers can confidentially review your property for possible inclusion in Presello's curated listings.</p>
         </div>
 
-        <form className="list-prop-form" onSubmit={handleSubmit}>
+        <form className="list-prop-form" onSubmit={handleSubmit} noValidate>
             
             {/* Section 1: Customer Info */}
             <div className="form-section">
@@ -87,8 +196,10 @@ export default function List() {
                     placeholder="Enter your first name" 
                     value={formData.firstName} 
                     onChange={handleChange}
-                    required 
+                    className={errors.firstName ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.firstName)}
                   />
+                  {errors.firstName && <p className="list-error-text">{errors.firstName}</p>}
                 </div>
                 <div className="list-form-field">
                   <label>Last Name*</label>
@@ -98,8 +209,10 @@ export default function List() {
                     placeholder="Enter your last name" 
                     value={formData.lastName} 
                     onChange={handleChange}
-                    required 
+                    className={errors.lastName ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.lastName)}
                   />
+                  {errors.lastName && <p className="list-error-text">{errors.lastName}</p>}
                 </div>
               </div>
 
@@ -112,19 +225,25 @@ export default function List() {
                     placeholder="name@example.com" 
                     value={formData.email} 
                     onChange={handleChange}
-                    required 
+                    className={errors.email ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.email)}
                   />
+                  {errors.email && <p className="list-error-text">{errors.email}</p>}
                 </div>
                 <div className="list-form-field">
                   <label>Phone Number*</label>
                   <input 
                     type="text" 
                     name="phoneNumber" 
+                    inputMode="numeric"
+                    maxLength={15}
                     placeholder="0917XXXXXXX" 
                     value={formData.phoneNumber} 
                     onChange={handleChange}
-                    required 
+                    className={errors.phoneNumber ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.phoneNumber)}
                   />
+                  {errors.phoneNumber && <p className="list-error-text">{errors.phoneNumber}</p>}
                 </div>
               </div>
             </div>
@@ -157,7 +276,8 @@ export default function List() {
                     name="location" 
                     value={formData.location} 
                     onChange={handleChange}
-                    required
+                    className={errors.location ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.location)}
                   >
                     <option value="">Select Property Location</option>
                     <option value="Alabang">Ayala Alabang</option>
@@ -168,6 +288,7 @@ export default function List() {
                     <option value="Tagaytay City">Tagaytay City</option>
                     <option value="Others">Others</option>
                   </select>
+                  {errors.location && <p className="list-error-text">{errors.location}</p>}
                 </div>
               </div>
 
@@ -177,21 +298,27 @@ export default function List() {
                   <input 
                     type="text" 
                     name="targetPrice" 
+                    inputMode="numeric"
                     placeholder="e.g., 25000000" 
                     value={formData.targetPrice} 
                     onChange={handleChange}
-                    required 
+                    className={errors.targetPrice ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.targetPrice)}
                   />
+                  {errors.targetPrice && <p className="list-error-text">{errors.targetPrice}</p>}
                 </div>
                 <div className="list-form-field">
-                  <label>Google Maps or Waze Link (Optional)</label>
+                  <label>Google Maps Link (Optional)</label>
                   <input 
                     type="text" 
                     name="wazeLink" 
-                    placeholder="Paste a Google Maps or Waze link..." 
+                    placeholder="Paste a Google Maps link..." 
                     value={formData.wazeLink} 
                     onChange={handleChange}
+                    className={errors.wazeLink ? 'list-input--error' : ''}
+                    aria-invalid={Boolean(errors.wazeLink)}
                   />
+                  {errors.wazeLink && <p className="list-error-text">{errors.wazeLink}</p>}
                 </div>
               </div>
 
@@ -215,8 +342,11 @@ export default function List() {
                       </svg>
                     </span>
                     <span>Click to browse or drag and drop property images here</span>
+                    <span className="upload-count">{images.length}/{MAX_IMAGES} photos</span>
                   </label>
                 </div>
+
+                {errors.images && <p className="list-error-text">{errors.images}</p>}
 
                 {images.length > 0 && (
                   <div className="image-preview-grid">

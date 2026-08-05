@@ -1,9 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import './Contact.css';
 
 export default function Contact() {
+  const location = useLocation();
+
+  // Lets a button elsewhere in the site (e.g. Help section's "Talk to an
+  // agent") link straight to /contact#talk-to-agent and land scrolled to
+  // that section, offset for the fixed navbar. React Router doesn't reset
+  // scroll position on navigation, so we always reset to the top first —
+  // otherwise leftover scroll from whatever page we came from gets added
+  // into the target's position and overshoots way past it.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+
+    if (!location.hash) return
+    const target = document.querySelector(location.hash)
+    if (!target) return
+
+    const navbarOffset = 90
+    const top = target.getBoundingClientRect().top - navbarOffset
+    window.scrollTo({ top, behavior: 'smooth' })
+  }, [location.hash])
+
   const initialLightFormData = {
     firstName: '',
     lastName: '',
@@ -237,7 +258,7 @@ export default function Contact() {
       </section>
 
       {/* SECTION 2: Dark Theme Expert Section */}
-      <section className="dark-expert-section">
+      <section className="dark-expert-section" id="talk-to-agent">
         <div className="expert-container">
           <h2>SPEAK TO A REAL ESTATE EXPERT</h2>
           <p className="expert-subtitle">RealState Clients gain personalized property advice</p>
