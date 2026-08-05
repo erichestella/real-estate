@@ -4,6 +4,7 @@ import ProtectedAdminRoute from './components/ProtectedAdminRoute.jsx'
 import MainPage from './pages/MainPage.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminMainPage from './pages/AdminMainPage.jsx'
 import BookViewing from './pages/BookViewing.jsx'
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"
