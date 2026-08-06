@@ -1,4 +1,10 @@
 .admin-nav {
+  /* Pinned locally so the nav text stays a consistent dark ink on every
+     admin page. Some pages wrap AdminNav in a themed shell (.admin.light
+     -theme / .admin.dark-theme) that redefines --color-ink for its own
+     content; without this override the nav would silently inherit that
+     page-specific value and look different from page to page. */
+  --color-ink: #2B2521;
   background-color: var(--color-header-dark);
   color: var(--color-bg);
   flex-shrink: 0;
@@ -50,7 +56,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: var(--color-accent-soft);
+  color: var(--color-ink);
   padding: 8px 14px;
   border-radius: var(--radius-sm);
   transition: color 0.15s ease, background-color 0.15s ease;

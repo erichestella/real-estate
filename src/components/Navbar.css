@@ -84,8 +84,142 @@
   color: var(--color-ink);
 }
 
-@media (max-width: 720px) {
-  .navbar__links {
+.navbar__login--mobile {
+  display: none;
+}
+
+.navbar__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  flex-shrink: 0;
+}
+
+.navbar__toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-bg);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.navbar__toggle.is-active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.navbar__toggle.is-active span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar__toggle.is-active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.navbar__backdrop {
+  display: none;
+}
+
+/* Tablet: hamburger menu, slide-in panel from the right */
+@media (max-width: 1024px) {
+  .navbar__inner {
+    height: 72px;
+    gap: 16px;
+  }
+
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__actions {
+    gap: 14px;
+    margin-left: 0;
+  }
+
+  .navbar__login--desktop {
     display: none;
+  }
+
+  .navbar__login--mobile {
+    display: inline-flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .navbar__links {
+    position: fixed;
+    top: 72px;
+    right: 0;
+    height: calc(100vh - 72px);
+    width: min(360px, 78vw);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-left: 0;
+    background-color: var(--color-header-dark);
+    padding: 12px 28px 28px;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 2001;
+    overflow-y: auto;
+  }
+
+  .navbar__links.navbar__links--open {
+    transform: translateX(0);
+    box-shadow: -12px 0 30px rgba(0, 0, 0, 0.18);
+  }
+
+  .navbar__links a {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(249, 248, 246, 0.15);
+    font-size: 1rem;
+  }
+
+  .navbar__backdrop {
+    display: block;
+    position: fixed;
+    inset: 72px 0 0 0;
+    background-color: rgba(20, 16, 13, 0.4);
+    z-index: 2000;
+  }
+}
+
+/* Phone: full-width slide-in panel and tighter header */
+@media (max-width: 480px) {
+  .navbar__inner {
+    height: 64px;
+    padding: 0 12px;
+  }
+
+  .navbar__brand {
+    font-size: 0.95rem;
+    gap: 8px;
+  }
+
+  .navbar__logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .navbar__links {
+    top: 64px;
+    height: calc(100vh - 64px);
+    width: 100%;
+    padding: 8px 20px 24px;
+  }
+
+  .navbar__backdrop {
+    inset: 64px 0 0 0;
+  }
+
+  .navbar__actions {
+    gap: 10px;
   }
 }
