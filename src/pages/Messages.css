@@ -26,14 +26,15 @@
   box-sizing: border-box;
 }
 
-/* Themes */
+/* Themes — same palette as Profile.css / AdminMainPage.css so the whole
+   admin console (Profile, All Listing, Notifications, Messages) matches. */
 .messages-wrapper.dark-theme {
-  background-color: #121212;
-  color: #E0E0E0;
+  background-color: #2D2721;
+  color: #F9F8F6;
 }
 .messages-wrapper.light-theme {
-  background-color: #F8F9FA;
-  color: #212529;
+  background-color: #F9F8F6;
+  color: #2C2825;
 }
 
 /* 1. Sidebar */

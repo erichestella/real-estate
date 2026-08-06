@@ -225,6 +225,7 @@ function BookViewing() {
                   id="firstName"
                   name="firstName"
                   type="text"
+                  placeholder="Enter your first name"
                   className={errors.firstName ? 'book-viewing__input--error' : ''}
                   value={form.firstName}
                   onChange={handleChange}
@@ -239,6 +240,7 @@ function BookViewing() {
                 <input
                   id="lastName"
                   name="lastName"
+                  placeholder="Enter your last name"
                   type="text"
                   className={errors.lastName ? 'book-viewing__input--error' : ''}
                   value={form.lastName}
@@ -257,6 +259,7 @@ function BookViewing() {
                 id="email"
                 name="email"
                 type="email"
+                placeholder="yourname@gmail.com"
                 className={errors.email ? 'book-viewing__input--error' : ''}
                 value={form.email}
                 onChange={handleChange}
@@ -283,7 +286,7 @@ function BookViewing() {
                   name="phone"
                   type="tel"
                   inputMode="numeric"
-                  placeholder="+63"
+                  placeholder="+630912345678"
                   maxLength={15}
                   className={errors.phone ? 'book-viewing__input--error' : ''}
                   value={form.phone}

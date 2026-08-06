@@ -1,9 +1,29 @@
 import { useState, useRef, useEffect } from 'react';
 import AdminNav from '../components/AdminNav.jsx';
+import { useAdminAuth } from '../context/AdminAuthContext.jsx';
 import './Messages.css';
 
+// Color roles driven by the shared admin theme (AdminAuthContext), so
+// Messages matches Profile / AdminMainPage instead of always looking
+// like the light theme regardless of the toggle.
+const LIGHT_THEME = {
+  surface: '#F9F8F6',
+  bgSidebar: '#EFE9E3',
+  border: '#D9CFC7',
+  text: '#2C2825',
+  textMuted: '#6E655D',
+};
+const DARK_THEME = {
+  surface: '#38312B',
+  bgSidebar: '#2D2721',
+  border: '#473E36',
+  text: '#F9F8F6',
+  textMuted: '#D9CFC7',
+};
+
 export default function Messages() {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, themeClass } = useAdminAuth();
+  const T = darkMode ? DARK_THEME : LIGHT_THEME;
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeNav, setActiveNav] = useState('messages');
@@ -247,24 +267,24 @@ export default function Messages() {
   const pinnedMessages = messages.filter(m => m.pinned);
 
   return (
-    <div className="messages-page">
+    <div className={`messages-page ${themeClass}`}>
       {/* Same shared admin nav used across the admin console, so it stays visible and switchable here too */}
       <AdminNav />
 
     <div 
-      className="messages-wrapper"
+      className={`messages-wrapper ${themeClass}`}
       style={{
-        '--bg-main': '#F9F8F6',
-        '--bg-sidebar': '#EFE9E3',
-        '--border-color': '#D9CFC7',
+        '--bg-main': T.surface,
+        '--bg-sidebar': T.bgSidebar,
+        '--border-color': T.border,
         '--accent-color': '#C9B59C',
-        backgroundColor: '#F9F8F6',
-        color: '#2C2825'
+        backgroundColor: T.surface,
+        color: T.text
       }}
     >
       
       {/* 1. LEFT NARROW ICON SIDEBAR */}
-      <div className="messages-sidebar" style={{ backgroundColor: '#EFE9E3', borderRight: '1px solid #D9CFC7' }}>
+      <div className="messages-sidebar" style={{ backgroundColor: T.bgSidebar, borderRight: '1px solid #D9CFC7' }}>
         <div className="sidebar-top-icon">
           <div className="brand-logo-circle profile-badge-circle" title="User Profile" style={{ backgroundColor: '#C9B59C', color: '#F9F8F6' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -272,27 +292,27 @@ export default function Messages() {
         </div>
         
         <div className="sidebar-nav-links">
-          <div className={`nav-icon ${activeNav === 'messages' ? 'active' : ''}`} onClick={() => setActiveNav('messages')} title="Messages" style={{ color: activeNav === 'messages' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'home' ? 'active' : ''}`} onClick={() => setActiveNav('home')} title="Home" style={{ color: activeNav === 'home' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'projects' ? 'active' : ''}`} onClick={() => setActiveNav('projects')} title="Projects" style={{ color: activeNav === 'projects' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'team' ? 'active' : ''}`} onClick={() => setActiveNav('team')} title="Team" style={{ color: activeNav === 'team' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'calendar' ? 'active' : ''}`} onClick={() => setActiveNav('calendar')} title="Calendar" style={{ color: activeNav === 'calendar' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'downloads' ? 'active' : ''}`} onClick={() => setActiveNav('downloads')} title="Downloads" style={{ color: activeNav === 'downloads' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
-          <div className={`nav-icon ${activeNav === 'notifications' ? 'active' : ''}`} onClick={() => setActiveNav('notifications')} title="Notifications" style={{ color: activeNav === 'notifications' ? '#2C2825' : '#6E655D' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'messages' ? 'active' : ''}`} onClick={() => setActiveNav('messages')} title="Messages" style={{ color: activeNav === 'messages' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'home' ? 'active' : ''}`} onClick={() => setActiveNav('home')} title="Home" style={{ color: activeNav === 'home' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'projects' ? 'active' : ''}`} onClick={() => setActiveNav('projects')} title="Projects" style={{ color: activeNav === 'projects' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'team' ? 'active' : ''}`} onClick={() => setActiveNav('team')} title="Team" style={{ color: activeNav === 'team' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'calendar' ? 'active' : ''}`} onClick={() => setActiveNav('calendar')} title="Calendar" style={{ color: activeNav === 'calendar' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'downloads' ? 'active' : ''}`} onClick={() => setActiveNav('downloads')} title="Downloads" style={{ color: activeNav === 'downloads' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+          <div className={`nav-icon ${activeNav === 'notifications' ? 'active' : ''}`} onClick={() => setActiveNav('notifications')} title="Notifications" style={{ color: activeNav === 'notifications' ? T.text : T.textMuted }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
         </div>
 
         <div className="sidebar-bottom-action"></div>
       </div>
 
       {/* 2. CHAT LIST PANEL */}
-      <div className="chat-list-panel" style={{ backgroundColor: '#EFE9E3', borderRight: '1px solid #D9CFC7' }}>
+      <div className="chat-list-panel" style={{ backgroundColor: T.bgSidebar, borderRight: '1px solid #D9CFC7' }}>
         <div className="chat-list-header" style={{ borderBottom: '1px solid #D9CFC7', position: 'relative' }}>
-          <h2 style={{ color: '#2C2825' }}>Messages</h2>
+          <h2 style={{ color: T.text }}>Messages</h2>
           <div className="chat-list-actions" style={{ display: 'flex', gap: '4px', position: 'relative' }} ref={optionsMenuRef}>
-            <button className="icon-btn" title="New Chat" onClick={() => setShowNewChatModal(true)} style={{ color: '#2C2825', background: 'none', border: 'none', cursor: 'pointer' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            <button className="icon-btn" title="New Chat" onClick={() => setShowNewChatModal(true)} style={{ color: T.text, background: 'none', border: 'none', cursor: 'pointer' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
             
             {/* Functional Three Dots Button */}
-            <button className="icon-btn" title="More Options" onClick={() => setShowOptionsMenu(!showOptionsMenu)} style={{ color: '#2C2825', background: 'none', border: 'none', cursor: 'pointer' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            <button className="icon-btn" title="More Options" onClick={() => setShowOptionsMenu(!showOptionsMenu)} style={{ color: T.text, background: 'none', border: 'none', cursor: 'pointer' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
 
             {/* Functional Dropdown Menu */}
             {showOptionsMenu && (
@@ -300,7 +320,7 @@ export default function Messages() {
                 position: 'absolute',
                 top: '30px',
                 right: '0',
-                backgroundColor: '#F9F8F6',
+                backgroundColor: T.surface,
                 border: '1px solid #D9CFC7',
                 borderRadius: '8px',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
@@ -310,16 +330,16 @@ export default function Messages() {
               }}>
                 <button 
                   onClick={handleMarkAllAsRead}
-                  style={{ width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', fontSize: '11px', color: '#2C2825', cursor: 'pointer' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#D9CFC7'}
+                  style={{ width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', fontSize: '11px', color: T.text, cursor: 'pointer' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = T.border}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
                   Mark all as read
                 </button>
                 <button 
                   onClick={handleToggleAllNotifications}
-                  style={{ width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', fontSize: '11px', color: '#2C2825', cursor: 'pointer' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#D9CFC7'}
+                  style={{ width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', fontSize: '11px', color: T.text, cursor: 'pointer' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = T.border}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
                   {isMuted ? 'Unmute all notifications' : 'Mute all notifications'}
@@ -327,7 +347,7 @@ export default function Messages() {
                 <button 
                   onClick={handleClearAllChats}
                   style={{ width: '100%', textAlign: 'left', padding: '8px 12px', background: 'none', border: 'none', fontSize: '11px', color: '#c0392b', cursor: 'pointer' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#D9CFC7'}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = T.border}
                   onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                 >
                   Clear all history
@@ -344,32 +364,32 @@ export default function Messages() {
               placeholder="Chat name..." 
               value={newChatName} 
               onChange={(e) => setNewChatName(e.target.value)}
-              style={{ padding: '6px 10px', fontSize: '11px', borderRadius: '6px', border: '1px solid #D9CFC7', backgroundColor: '#F9F8F6', color: '#2C2825', flex: 1 }}
+              style={{ padding: '6px 10px', fontSize: '11px', borderRadius: '6px', border: '1px solid #D9CFC7', backgroundColor: T.surface, color: T.text, flex: 1 }}
             />
             <button type="submit" className="send-btn" style={{ padding: '6px 10px', fontSize: '11px', backgroundColor: '#C9B59C', color: '#F9F8F6', border: 'none', borderRadius: '6px' }}>Add</button>
           </form>
         )}
 
-        <div className="search-box-wrapper" style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', margin: '12px 16px', borderRadius: '8px' }}>
+        <div className="search-box-wrapper" style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', margin: '12px 16px', borderRadius: '8px' }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E655D" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input 
             type="text" 
             placeholder="Search" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ backgroundColor: 'transparent', color: '#2C2825', border: 'none', outline: 'none', width: '100%' }}
+            style={{ backgroundColor: 'transparent', color: T.text, border: 'none', outline: 'none', width: '100%' }}
           />
         </div>
 
         <div className="conversations-scroll">
-          <div className="section-label" style={{ color: '#6E655D', paddingLeft: '16px', fontSize: '11px', fontWeight: 'bold' }}>Pinned Chats</div>
+          <div className="section-label" style={{ color: T.textMuted, paddingLeft: '16px', fontSize: '11px', fontWeight: 'bold' }}>Pinned Chats</div>
           {filteredConversations.filter(c => c.pinned).map(chat => (
             <div 
               key={chat.id} 
               className={`conversation-item ${selectedChatId === chat.id ? 'active-chat-item' : ''}`}
               onClick={() => handleSelectChat(chat)}
               style={{ 
-                backgroundColor: selectedChatId === chat.id ? '#D9CFC7' : 'transparent',
+                backgroundColor: selectedChatId === chat.id ? T.border : 'transparent',
                 padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', borderBottom: '1px solid rgba(217, 207, 199, 0.4)'
               }}
             >
@@ -382,27 +402,27 @@ export default function Messages() {
               </div>
               <div className="chat-preview-info" style={{ flex: 1, minWidth: 0 }}>
                 <div className="chat-item-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <h4 style={{ margin: 0, fontSize: '13px', color: '#2C2825' }}>{chat.name}</h4>
-                  <span className="time" style={{ fontSize: '10px', color: '#6E655D' }}>{chat.time}</span>
+                  <h4 style={{ margin: 0, fontSize: '13px', color: T.text }}>{chat.name}</h4>
+                  <span className="time" style={{ fontSize: '10px', color: T.textMuted }}>{chat.time}</span>
                 </div>
-                <p className="typing-preview" style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6E655D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chat.preview}</p>
+                <p className="typing-preview" style={{ margin: '2px 0 0 0', fontSize: '11px', color: T.textMuted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chat.preview}</p>
               </div>
               {chat.unread > 0 && <span className="unread-badge" style={{ backgroundColor: '#C9B59C', color: '#F9F8F6', fontSize: '10px', padding: '2px 6px', borderRadius: '10px' }}>{chat.unread}</span>}
             </div>
           ))}
 
-          <div className="section-label" style={{ marginTop: '16px', color: '#6E655D', paddingLeft: '16px', fontSize: '11px', fontWeight: 'bold' }}>All Messages</div>
+          <div className="section-label" style={{ marginTop: '16px', color: T.textMuted, paddingLeft: '16px', fontSize: '11px', fontWeight: 'bold' }}>All Messages</div>
           {filteredConversations.filter(c => !c.pinned).map(chat => (
             <div 
               key={chat.id} 
               className={`conversation-item ${selectedChatId === chat.id ? 'active-chat-item' : ''}`}
               onClick={() => handleSelectChat(chat)}
               style={{ 
-                backgroundColor: selectedChatId === chat.id ? '#D9CFC7' : 'transparent',
+                backgroundColor: selectedChatId === chat.id ? T.border : 'transparent',
                 padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', borderBottom: '1px solid rgba(217, 207, 199, 0.4)'
               }}
             >
-              <div className="avatar-placeholder-sm" style={{ backgroundColor: '#D9CFC7', color: '#2C2825', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', overflow: 'hidden' }}>
+              <div className="avatar-placeholder-sm" style={{ backgroundColor: T.border, color: T.text, width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', overflow: 'hidden' }}>
                 {chat.avatar ? (
                   <img src={chat.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
@@ -411,10 +431,10 @@ export default function Messages() {
               </div>
               <div className="chat-preview-info" style={{ flex: 1, minWidth: 0 }}>
                 <div className="chat-item-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <h4 style={{ margin: 0, fontSize: '13px', color: '#2C2825' }}>{chat.name}</h4>
-                  <span className="time" style={{ fontSize: '10px', color: '#6E655D' }}>{chat.time}</span>
+                  <h4 style={{ margin: 0, fontSize: '13px', color: T.text }}>{chat.name}</h4>
+                  <span className="time" style={{ fontSize: '10px', color: T.textMuted }}>{chat.time}</span>
                 </div>
-                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6E655D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chat.preview}</p>
+                <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: T.textMuted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{chat.preview}</p>
               </div>
               {chat.unread > 0 && <span className="unread-badge" style={{ backgroundColor: '#C9B59C', color: '#F9F8F6', fontSize: '10px', padding: '2px 6px', borderRadius: '10px' }}>{chat.unread}</span>}
             </div>
@@ -423,8 +443,8 @@ export default function Messages() {
       </div>
 
       {/* 3. MAIN CHAT WINDOW */}
-      <div className="main-chat-window" style={{ backgroundColor: '#F9F8F6', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div className="main-chat-header" style={{ backgroundColor: '#EFE9E3', borderBottom: '1px solid #D9CFC7', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="main-chat-window" style={{ backgroundColor: T.surface, display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div className="main-chat-header" style={{ backgroundColor: T.bgSidebar, borderBottom: '1px solid #D9CFC7', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="active-chat-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div className="avatar-placeholder-sm profile-avatar-icon" style={{ backgroundColor: '#C9B59C', color: '#F9F8F6', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
               {activeChat.avatar ? (
@@ -434,24 +454,24 @@ export default function Messages() {
               )}
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '14px', color: '#2C2825' }}>{activeChat.name}</h3>
-              <span className="typing-status" style={{ fontSize: '11px', color: '#6E655D' }}>{activeChat.status}</span>
+              <h3 style={{ margin: 0, fontSize: '14px', color: T.text }}>{activeChat.name}</h3>
+              <span className="typing-status" style={{ fontSize: '11px', color: T.textMuted }}>{activeChat.status}</span>
             </div>
           </div>
           <div className="main-header-icons" style={{ display: 'flex', gap: '10px' }}>
-            <button className="icon-btn" title="Video Call" onClick={() => handleStartCall('video')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></button>
-            <button className="icon-btn" title="Audio Call" onClick={() => handleStartCall('audio')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
-            <button className="icon-btn" title="Toggle Info Panel" onClick={() => setShowGroupInfo(!showGroupInfo)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+            <button className="icon-btn" title="Video Call" onClick={() => handleStartCall('video')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></button>
+            <button className="icon-btn" title="Audio Call" onClick={() => handleStartCall('audio')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+            <button className="icon-btn" title="Toggle Info Panel" onClick={() => setShowGroupInfo(!showGroupInfo)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
           </div>
         </div>
 
         {/* Pinned Messages Banner Bar */}
         {pinnedMessages.length > 0 && (
-          <div className="pinned-messages-banner" style={{ backgroundColor: '#EFE9E3', padding: '6px 16px', borderBottom: '1px solid #D9CFC7', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="pinned-messages-banner" style={{ backgroundColor: T.bgSidebar, padding: '6px 16px', borderBottom: '1px solid #D9CFC7', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '11px', fontWeight: '700', color: '#C9B59C', display: 'flex', alignItems: 'center', gap: '5px' }}><i className="fa-solid fa-thumbtack" aria-hidden="true"></i> Pinned ({pinnedMessages.length}):</span>
             <span 
               onClick={() => handleJumpToMessage(pinnedMessages[pinnedMessages.length - 1].id)}
-              style={{ fontSize: '11px', color: '#6E655D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ fontSize: '11px', color: T.textMuted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, cursor: 'pointer', textDecoration: 'underline' }}
               title="Click to jump to message"
             >
               "{pinnedMessages[pinnedMessages.length - 1].text}"
@@ -460,7 +480,7 @@ export default function Messages() {
         )}
 
         <div className="chat-messages-container" ref={chatContainerRef} style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
-          <div className="date-badge-wrapper" style={{ textAlign: 'center', margin: '10px 0' }}><span style={{ backgroundColor: '#EFE9E3', padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: '#6E655D', border: '1px solid #D9CFC7' }}>Today, March 12</span></div>
+          <div className="date-badge-wrapper" style={{ textAlign: 'center', margin: '10px 0' }}><span style={{ backgroundColor: T.bgSidebar, padding: '4px 10px', borderRadius: '12px', fontSize: '10px', color: T.textMuted, border: '1px solid #D9CFC7' }}>Today, March 12</span></div>
 
           {messages.map((msg) => {
             const isReallyMe = msg.isMe === true || msg.sender === 'You';
@@ -488,14 +508,14 @@ export default function Messages() {
                 }}
               >
                 {!isReallyMe && (
-                  <div className="avatar-placeholder-xs" style={{ backgroundColor: '#D9CFC7', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#2C2825' }}><i className="fa-solid fa-user" aria-hidden="true"></i></div>
+                  <div className="avatar-placeholder-xs" style={{ backgroundColor: T.border, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: T.text }}><i className="fa-solid fa-user" aria-hidden="true"></i></div>
                 )}
                 
                 <div 
                   className={`message-bubble ${isReallyMe ? 'my-bubble' : 'peer-bubble'}`} 
                   style={{ 
-                    backgroundColor: isReallyMe ? '#C9B59C' : '#EFE9E3', 
-                    color: isReallyMe ? '#F9F8F6' : '#2C2825', 
+                    backgroundColor: isReallyMe ? '#C9B59C' : T.bgSidebar, 
+                    color: isReallyMe ? '#F9F8F6' : T.text, 
                     padding: '10px 14px', 
                     borderRadius: '12px', 
                     maxWidth: '100%', 
@@ -538,7 +558,7 @@ export default function Messages() {
                         bottom: '-32px',
                         right: isReallyMe ? '0' : 'auto',
                         left: isReallyMe ? 'auto' : '0',
-                        backgroundColor: '#F9F8F6',
+                        backgroundColor: T.surface,
                         border: '1px solid #D9CFC7',
                         borderRadius: '6px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
@@ -556,11 +576,11 @@ export default function Messages() {
                           background: 'none',
                           border: 'none',
                           fontSize: '11px',
-                          color: '#2C2825',
+                          color: T.text,
                           cursor: 'pointer',
                           whiteSpace: 'nowrap'
                         }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#D9CFC7'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = T.border}
                         onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                       >
                         <i className="fa-solid fa-thumbtack" aria-hidden="true"></i> {msg.pinned ? 'Unpin' : 'Pin message'}
@@ -577,21 +597,21 @@ export default function Messages() {
           })}
         </div>
 
-        <form onSubmit={handleSendMessage} className="chat-input-footer" style={{ backgroundColor: '#EFE9E3', padding: '12px 20px', borderTop: '1px solid #D9CFC7', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <form onSubmit={handleSendMessage} className="chat-input-footer" style={{ backgroundColor: T.bgSidebar, padding: '12px 20px', borderTop: '1px solid #D9CFC7', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div className="input-toolbar-icons">
-            <button type="button" className="icon-btn" title="Attach File" onClick={() => alert('Attach file dialog opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
+            <button type="button" className="icon-btn" title="Attach File" onClick={() => alert('Attach file dialog opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
           </div>
           <input
             type="text"
             placeholder="Type a message..."
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            style={{ flex: 1, backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '10px 14px', borderRadius: '20px', fontSize: '13px', color: '#2C2825', outline: 'none' }}
+            style={{ flex: 1, backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '10px 14px', borderRadius: '20px', fontSize: '13px', color: T.text, outline: 'none' }}
           />
           <div className="input-right-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button type="button" className="icon-btn" title="Emoji" onClick={() => alert('Emoji picker opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
-            <button type="button" className="icon-btn" title="Attachment" onClick={() => alert('Attachment picker opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-            <button type="button" className="icon-btn" title="Location" onClick={() => alert('Share location clicked.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>
+            <button type="button" className="icon-btn" title="Emoji" onClick={() => alert('Emoji picker opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+            <button type="button" className="icon-btn" title="Attachment" onClick={() => alert('Attachment picker opened.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+            <button type="button" className="icon-btn" title="Location" onClick={() => alert('Share location clicked.')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>
             <button type="submit" className="send-btn" style={{ backgroundColor: '#C9B59C', color: '#F9F8F6', border: 'none', padding: '8px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
               Send <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -601,10 +621,10 @@ export default function Messages() {
 
       {/* 4. RIGHT SIDEBAR PANEL */}
       {showGroupInfo && (
-        <div className="group-info-panel" style={{ backgroundColor: '#EFE9E3', borderLeft: '1px solid #D9CFC7', width: '280px', padding: '16px', overflowY: 'auto' }}>
+        <div className="group-info-panel" style={{ backgroundColor: T.bgSidebar, borderLeft: '1px solid #D9CFC7', width: '280px', padding: '16px', overflowY: 'auto' }}>
           <div className="group-info-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h4 style={{ margin: 0, fontSize: '13px', color: '#2C2825' }}>{activeChat.isGroup ? 'Group Info' : 'User Info'}</h4>
-            <button className="icon-btn" onClick={() => setShowGroupInfo(false)} title="Close Panel" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#2C2825', fontSize: '14px' }}><i className="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <h4 style={{ margin: 0, fontSize: '13px', color: T.text }}>{activeChat.isGroup ? 'Group Info' : 'User Info'}</h4>
+            <button className="icon-btn" onClick={() => setShowGroupInfo(false)} title="Close Panel" style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.text, fontSize: '14px' }}><i className="fa-solid fa-xmark" aria-hidden="true"></i></button>
           </div>
 
           <div className="group-profile-card" style={{ textAlign: 'center', marginBottom: '16px' }}>
@@ -615,8 +635,8 @@ export default function Messages() {
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               )}
             </div>
-            <h3 style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#2C2825' }}>{activeChat.name}</h3>
-            <p style={{ margin: 0, fontSize: '11px', color: '#6E655D' }}>{activeChat.isGroup ? `Group · ${activeChat.membersCount || 12} Members` : activeChat.status}</p>
+            <h3 style={{ margin: '0 0 4px 0', fontSize: '14px', color: T.text }}>{activeChat.name}</h3>
+            <p style={{ margin: 0, fontSize: '11px', color: T.textMuted }}>{activeChat.isGroup ? `Group · ${activeChat.membersCount || 12} Members` : activeChat.status}</p>
 
             {activeChat.isGroup && (
               <button 
@@ -632,7 +652,7 @@ export default function Messages() {
                   borderRadius: '12px',
                   padding: '4px 10px',
                   fontSize: '10px',
-                  color: '#2C2825',
+                  color: T.text,
                   cursor: 'pointer'
                 }}
               >
@@ -643,22 +663,22 @@ export default function Messages() {
 
           {/* Edit Group Form Panel inside Sidebar */}
           {activeChat.isGroup && isEditingGroup && (
-            <form onSubmit={handleSaveGroupSettings} style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '10px', borderRadius: '8px', marginBottom: '16px' }}>
-              <h5 style={{ fontSize: '11px', color: '#2C2825', margin: '0 0 8px 0' }}>Change Group Settings</h5>
+            <form onSubmit={handleSaveGroupSettings} style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '10px', borderRadius: '8px', marginBottom: '16px' }}>
+              <h5 style={{ fontSize: '11px', color: T.text, margin: '0 0 8px 0' }}>Change Group Settings</h5>
               
               <div style={{ marginBottom: '8px' }}>
-                <label style={{ fontSize: '10px', color: '#6E655D', display: 'block', marginBottom: '2px' }}>Group Name</label>
+                <label style={{ fontSize: '10px', color: T.textMuted, display: 'block', marginBottom: '2px' }}>Group Name</label>
                 <input 
                   type="text" 
                   value={editGroupName} 
                   onChange={(e) => setEditGroupName(e.target.value)}
-                  style={{ width: '100%', padding: '6px', fontSize: '11px', borderRadius: '4px', border: '1px solid #D9CFC7', backgroundColor: '#EFE9E3', color: '#2C2825', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '6px', fontSize: '11px', borderRadius: '4px', border: '1px solid #D9CFC7', backgroundColor: T.bgSidebar, color: T.text, boxSizing: 'border-box' }}
                 />
               </div>
 
               {/* Local Folder Upload Picker Option */}
               <div style={{ marginBottom: '10px' }}>
-                <label style={{ fontSize: '10px', color: '#6E655D', display: 'block', marginBottom: '4px' }}>Group Profile Picture</label>
+                <label style={{ fontSize: '10px', color: T.textMuted, display: 'block', marginBottom: '4px' }}>Group Profile Picture</label>
                 <input 
                   type="file" 
                   ref={fileInputRef}
@@ -670,7 +690,7 @@ export default function Messages() {
                   <button 
                     type="button"
                     onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                    style={{ flex: 1, backgroundColor: '#EFE9E3', border: '1px solid #D9CFC7', color: '#2C2825', padding: '6px', borderRadius: '4px', fontSize: '10px', cursor: 'pointer', textAlign: 'center' }}
+                    style={{ flex: 1, backgroundColor: T.bgSidebar, border: '1px solid #D9CFC7', color: T.text, padding: '6px', borderRadius: '4px', fontSize: '10px', cursor: 'pointer', textAlign: 'center' }}
                   >
                     <i className="fa-regular fa-folder-open" aria-hidden="true"></i> Browse Local Folder
                   </button>
@@ -693,25 +713,25 @@ export default function Messages() {
             <>
               {pinnedMessages.length > 0 && (
                 <div className="info-section-block" style={{ marginBottom: '16px' }}>
-                  <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '6px' }}>Pinned Messages ({pinnedMessages.length})</h5>
+                  <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '6px' }}>Pinned Messages ({pinnedMessages.length})</h5>
                   {pinnedMessages.map(pm => (
-                    <div key={pm.id} className="invite-link-box" style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '6px 10px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '11px' }}>
+                    <div key={pm.id} className="invite-link-box" style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '6px 10px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', fontSize: '11px' }}>
                       <span 
                         onClick={() => handleJumpToMessage(pm.id)}
-                        style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#2C2825', flex: 1, cursor: 'pointer', textDecoration: 'underline' }}
+                        style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: T.text, flex: 1, cursor: 'pointer', textDecoration: 'underline' }}
                         title="Click to jump to message"
                       >
                         {pm.text}
                       </span>
-                      <button className="copy-btn" onClick={() => handleTogglePinMessage(pm.id)} title="Unpin" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6E655D', marginLeft: '6px' }}><i className="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                      <button className="copy-btn" onClick={() => handleTogglePinMessage(pm.id)} title="Unpin" style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, marginLeft: '6px' }}><i className="fa-solid fa-xmark" aria-hidden="true"></i></button>
                     </div>
                   ))}
                 </div>
               )}
 
               <div className="info-section-block" style={{ marginBottom: '16px' }}>
-                <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '4px' }}>Invitation link</h5>
-                <div className="invite-link-box" style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '6px 10px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#2C2825' }}>
+                <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '4px' }}>Invitation link</h5>
+                <div className="invite-link-box" style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '6px 10px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: T.text }}>
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>{activeChat.inviteLink || 'workwise/invite'}</span>
                   <button 
                     className="copy-btn" 
@@ -728,63 +748,63 @@ export default function Messages() {
           ) : (
             <>
               <div className="info-section-block" style={{ marginBottom: '16px' }}>
-                <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '8px', textAlign: 'center' }}>Contact Information</h5>
+                <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '8px', textAlign: 'center' }}>Contact Information</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '11px', color: '#6E655D' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '11px', color: T.textMuted }}>
                     <span style={{ display: 'flex', alignItems: 'center', color: '#C9B59C' }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </span>
-                    <span style={{ color: '#2C2825', wordBreak: 'break-all' }}>{activeChat.email || 'N/A'}</span>
+                    <span style={{ color: T.text, wordBreak: 'break-all' }}>{activeChat.email || 'N/A'}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '11px', color: '#6E655D' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '11px', color: T.textMuted }}>
                     <span style={{ display: 'flex', alignItems: 'center', color: '#C9B59C' }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     </span>
-                    <span style={{ color: '#2C2825' }}>{activeChat.phone || 'N/A'}</span>
+                    <span style={{ color: T.text }}>{activeChat.phone || 'N/A'}</span>
                   </div>
                 </div>
               </div>
 
               <div className="info-section-block" style={{ marginBottom: '16px' }}>
-                <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '4px', textAlign: 'center' }}>Bio</h5>
-                <p className="desc-text" style={{ fontSize: '11px', color: '#6E655D', margin: 0, lineHeight: '1.4', textAlign: 'center' }}>Available for project collaborations, design reviews, and engineering consultations.</p>
+                <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '4px', textAlign: 'center' }}>Bio</h5>
+                <p className="desc-text" style={{ fontSize: '11px', color: T.textMuted, margin: 0, lineHeight: '1.4', textAlign: 'center' }}>Available for project collaborations, design reviews, and engineering consultations.</p>
               </div>
             </>
           )}
 
           <div className="info-section-block" style={{ marginBottom: '16px' }}>
             <div className="flex-row-between">
-              <h5 style={{ fontSize: '11px', color: '#2C2825', margin: 0 }}>Notification</h5>
+              <h5 style={{ fontSize: '11px', color: T.text, margin: 0 }}>Notification</h5>
             </div>
             <div className="flex-row-between" style={{ marginTop: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '11px', color: '#6E655D' }}>Mute notifications</span>
+              <span style={{ fontSize: '11px', color: T.textMuted }}>Mute notifications</span>
               <label className="switch-sm" style={{ cursor: 'pointer' }}>
                 <input type="checkbox" checked={isMuted} onChange={() => setIsMuted(!isMuted)} style={{ display: 'none' }} />
-                <span className="slider-sm" style={{ width: '30px', height: '16px', backgroundColor: isMuted ? '#C9B59C' : '#D9CFC7', display: 'inline-block', borderRadius: '10px', position: 'relative', transition: '0.2s' }}></span>
+                <span className="slider-sm" style={{ width: '30px', height: '16px', backgroundColor: isMuted ? '#C9B59C' : T.border, display: 'inline-block', borderRadius: '10px', position: 'relative', transition: '0.2s' }}></span>
               </label>
             </div>
           </div>
 
           <div className="info-section-block" style={{ marginBottom: '16px' }}>
-            <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '8px' }}>Shared Images</h5>
+            <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '8px' }}>Shared Images</h5>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px' }}>
               <div 
                 onClick={() => setPreviewImage('https://picsum.photos/seed/design1/600/600')} 
-                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: '#D9CFC7' }}
+                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: T.border }}
                 title="Click to preview image"
               >
                 <img src="https://picsum.photos/seed/design1/100/100" alt="Sample 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div 
                 onClick={() => setPreviewImage('https://picsum.photos/seed/design2/600/600')} 
-                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: '#D9CFC7' }}
+                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: T.border }}
                 title="Click to preview image"
               >
                 <img src="https://picsum.photos/seed/design2/100/100" alt="Sample 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               <div 
                 onClick={() => setPreviewImage('https://picsum.photos/seed/design3/600/600')} 
-                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: '#D9CFC7' }}
+                style={{ aspectRatio: '1/1', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', backgroundColor: T.border }}
                 title="Click to preview image"
               >
                 <img src="https://picsum.photos/seed/design3/100/100" alt="Sample 3" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -793,28 +813,28 @@ export default function Messages() {
           </div>
 
           <div className="info-section-block">
-            <h5 style={{ fontSize: '11px', color: '#2C2825', marginBottom: '8px' }}>Shared Files</h5>
+            <h5 style={{ fontSize: '11px', color: T.text, marginBottom: '8px' }}>Shared Files</h5>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div 
                 onClick={() => handleDownloadFile('Project_Specs.pdf', 'pdf')}
-                style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
                 title="Click to download file"
               >
                 <span style={{ fontSize: '14px', color: '#C0512E' }}><i className="fa-regular fa-file-pdf" aria-hidden="true"></i></span>
                 <div style={{ overflow: 'hidden', flex: 1 }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#2C2825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: '500' }}>Project_Specs.pdf</p>
-                  <span style={{ fontSize: '9px', color: '#6E655D' }}>2.4 MB · PDF (Click to download)</span>
+                  <p style={{ margin: 0, fontSize: '11px', color: T.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: '500' }}>Project_Specs.pdf</p>
+                  <span style={{ fontSize: '9px', color: T.textMuted }}>2.4 MB · PDF (Click to download)</span>
                 </div>
               </div>
               <div 
                 onClick={() => handleDownloadFile('Budget_Q2.xlsx', 'xlsx')}
-                style={{ backgroundColor: '#F9F8F6', border: '1px solid #D9CFC7', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                style={{ backgroundColor: T.surface, border: '1px solid #D9CFC7', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
                 title="Click to download file"
               >
                 <span style={{ fontSize: '14px', color: '#3F7A3B' }}><i className="fa-regular fa-file-excel" aria-hidden="true"></i></span>
                 <div style={{ overflow: 'hidden', flex: 1 }}>
-                  <p style={{ margin: 0, fontSize: '11px', color: '#2C2825', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: '500' }}>Budget_Q2.xlsx</p>
-                  <span style={{ fontSize: '9px', color: '#6E655D' }}>1.1 MB · Excel (Click to download)</span>
+                  <p style={{ margin: 0, fontSize: '11px', color: T.text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: '500' }}>Budget_Q2.xlsx</p>
+                  <span style={{ fontSize: '9px', color: T.textMuted }}>1.1 MB · Excel (Click to download)</span>
                 </div>
               </div>
             </div>

@@ -3,6 +3,38 @@
   background-color: var(--color-bg);
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ================= DARK / LIGHT THEME =================
+   Same darkMode toggle as the Admin Profile page (AdminThemeContext),
+   re-using the same palette as Profile.css so the whole admin console
+   stays visually consistent. Re-pointing the shared design tokens here
+   means every rule below that already uses var(--color-*) re-themes
+   automatically — no need to touch each rule individually. */
+.admin.dark-theme {
+  --color-bg: #2D2721;
+  --color-bg-alt: #38312B;
+  --color-white: #38312B;
+  --color-ink: #F9F8F6;
+  --color-ink-muted: #D9CFC7;
+  --color-accent-soft: #473E36;
+}
+
+.admin.light-theme {
+  --color-bg: #F9F8F6;
+  --color-bg-alt: #EFE9E3;
+  --color-white: #FFFFFF;
+  --color-ink: #7D6E5D;
+  --color-ink-muted: #A39685;
+  --color-accent-soft: #D9CFC7;
+}
+
+/* Status pills use light pastel chips in both themes, so keep their text
+   a fixed dark tone instead of following --color-ink (which flips light
+   in dark mode and would be unreadable on a light chip). */
+.admin.dark-theme .status-pill {
+  color: #2B2521;
 }
 
 .admin-main {

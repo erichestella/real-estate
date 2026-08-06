@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import AdminNav from '../components/AdminNav.jsx';
 import AdminFooter from '../components/AdminFooter.jsx';
+import { useAdminAuth } from '../context/AdminAuthContext.jsx';
 import './Profile.css';
 
 export default function Profile() {
+  // Dark/light mode lives in AdminAuthContext (alongside the admin
+  // session) so it's shared with every other admin page instead of
+  // resetting here.
+  const { darkMode, toggleDarkMode, themeClass } = useAdminAuth();
+
   const [name, setName] = useState({
     firstName: '',
     lastName: '',
@@ -11,9 +17,8 @@ export default function Profile() {
 
   const [profilePic, setProfilePic] = useState(null);
 
-  // Admin settings state
+  // Admin settings state (darkMode now comes from AdminThemeContext above)
   const [settings, setSettings] = useState({
-    darkMode: true,
     twoFactorAuth: true,
     auditLogs: true,
     autoBackup: true,
@@ -52,9 +57,9 @@ export default function Profile() {
       : 'Admin User';
 
   return (
-    <div className={`profile-page ${settings.darkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className={`profile-page ${themeClass}`}>
       <AdminNav />
-      <div className={`profile-wrapper ${settings.darkMode ? 'dark-theme' : 'light-theme'}`}>
+      <div className={`profile-wrapper ${themeClass}`}>
       <div className="profile-container">
         <h2 className="profile-header-title">Admin Profile</h2>
 
@@ -146,22 +151,22 @@ export default function Profile() {
           <div className="setting-row">
             <div className="setting-left">
               <div className="icon-badge">
-                {settings.darkMode ? (
+                {darkMode ? (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 ) : (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 )}
               </div>
               <div className="setting-text-group">
-                <div className="setting-title">{settings.darkMode ? 'Dark Theme' : 'Light Theme'}</div>
-                <div className="setting-desc">Toggle administrative dashboard appearance</div>
+                <div className="setting-title">{darkMode ? 'Dark Theme' : 'Light Theme'}</div>
+                <div className="setting-desc">Toggle administrative dashboard appearance (applies to all admin pages)</div>
               </div>
             </div>
             <label className="switch">
               <input
                 type="checkbox"
-                checked={settings.darkMode}
-                onChange={() => handleToggle('darkMode')}
+                checked={darkMode}
+                onChange={toggleDarkMode}
               />
               <span className="slider"></span>
             </label>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import AdminNav from '../components/AdminNav.jsx'
 import AdminFooter from '../components/AdminFooter.jsx'
+import { useAdminAuth } from '../context/AdminAuthContext.jsx'
 import properties from '../data/properties.js'
 import './AdminMainPage.css'
 
@@ -10,6 +11,9 @@ import './AdminMainPage.css'
 const statusSlug = (status) => status.replace(/\s/g, '').toLowerCase()
 
 function AdminMainPage() {
+  // Same dark/light theme set on the Admin Profile page — shared via
+  // AdminAuthContext so it stays in sync across the whole admin console.
+  const { themeClass } = useAdminAuth()
   const [status, setStatus] = useState('')
   const [location, setLocation] = useState('')
   const [postedBy, setPostedBy] = useState('')
@@ -82,7 +86,7 @@ function AdminMainPage() {
   }
 
   return (
-    <div className="admin">
+    <div className={`admin ${themeClass}`}>
       <AdminNav />
 
       <main className="admin-main container" id="listings">

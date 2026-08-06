@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import AdminNav from '../components/AdminNav.jsx'
 import AdminFooter from '../components/AdminFooter.jsx'
+import { useAdminAuth } from '../context/AdminAuthContext.jsx'
 import './Notifications.css'
 
 // TODO: swap out with real notification events from the backend once ready.
@@ -63,6 +64,9 @@ const FILTERS = [
 ]
 
 function Notifications() {
+  // Same dark/light theme as Profile / AdminMainPage, shared via
+  // AdminAuthContext so it stays in sync across the whole admin console.
+  const { themeClass } = useAdminAuth()
   const [notifications, setNotifications] = useState(initialNotifications)
   const [filter, setFilter] = useState('all')
 
@@ -85,7 +89,7 @@ function Notifications() {
   }
 
   return (
-    <div className="admin">
+    <div className={`admin ${themeClass}`}>
       <AdminNav />
 
       <main className="admin-main container" id="notifications">
