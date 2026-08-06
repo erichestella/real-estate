@@ -52,7 +52,7 @@
 }
 
 .admin-main__header h1 {
-  font-size: 1.7rem;
+  font-size: 30px;
   margin-bottom: 6px;
 }
 
@@ -196,8 +196,8 @@
 }
 
 .status-pill {
-  font-size: 0.68rem;
-  padding: 4px 10px;
+  font-size: 0.8rem;
+  padding: 6px 15px;
   border-radius: 999px;
   background-color: var(--color-bg-alt);
   color: var(--color-ink);

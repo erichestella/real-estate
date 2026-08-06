@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import AdminNav from '../components/AdminNav.jsx'
 import AdminFooter from '../components/AdminFooter.jsx'
+import FilterDropdown from '../components/FilterDropdown.jsx'
 import { useAdminAuth } from '../context/AdminAuthContext.jsx'
 import properties from '../data/properties.js'
 import './AdminMainPage.css'
@@ -102,33 +103,33 @@ function AdminMainPage() {
 
         <div className="admin-sort">
           <div className="admin-sort__field">
-            <label htmlFor="sortStatus">Status</label>
-            <select id="sortStatus" value={status} onChange={(e) => setStatus(e.target.value)}>
-              <option value="">All</option>
-              {statusOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
+            <FilterDropdown
+              label="Status"
+              value={status}
+              onChange={setStatus}
+              options={statusOptions}
+              resultCount={filtered.length}
+            />
           </div>
 
           <div className="admin-sort__field">
-            <label htmlFor="sortLocation">Location</label>
-            <select id="sortLocation" value={location} onChange={(e) => setLocation(e.target.value)}>
-              <option value="">All</option>
-              {locationOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
+            <FilterDropdown
+              label="Location"
+              value={location}
+              onChange={setLocation}
+              options={locationOptions}
+              resultCount={filtered.length}
+            />
           </div>
 
           <div className="admin-sort__field">
-            <label htmlFor="sortPostedBy">Posted By</label>
-            <select id="sortPostedBy" value={postedBy} onChange={(e) => setPostedBy(e.target.value)}>
-              <option value="">All</option>
-              {postedByOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
+            <FilterDropdown
+              label="Posted by"
+              value={postedBy}
+              onChange={setPostedBy}
+              options={postedByOptions}
+              resultCount={filtered.length}
+            />
           </div>
         </div>
 

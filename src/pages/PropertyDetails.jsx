@@ -64,7 +64,7 @@ function PropertyDetails() {
   const backLabel =
     fromPath === '/all-listing'
       ? 'Back to All Listing'
-      : fromPath === '/'
+      : fromPath === '/home'
         ? 'Back to Home'
         : 'Back to Listings'
   const goBack = () => {

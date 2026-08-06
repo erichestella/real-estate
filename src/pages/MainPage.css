@@ -1,7 +1,6 @@
 .hero {
   position: relative;
   padding-bottom: 0;
-  overflow: hidden;
   min-height: clamp(480px, 62vw, 720px);
   display: flex;
   align-items: flex-end;

@@ -102,7 +102,7 @@ html, body {
 }
 
 .light-theme .profile-header-title {
-  color: #C9B59C;
+  color: #7D6E5D;
   border-bottom: 1px solid #D9CFC7;
 }
 
@@ -163,7 +163,7 @@ html, body {
 }
 
 .profile-header-title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: 2px;
   margin-bottom: 30px;
@@ -416,12 +416,12 @@ html, body {
 }
 
 input:checked + .slider {
-  background-color: #C9B59C;
+  background-color: #D9CFC7;
 }
 
 input:checked + .slider:before {
   transform: translateX(20px);
-  background-color: #2D2721;
+  background-color: #F9F8F6;
 }
 
 /* Responsive Layout */
