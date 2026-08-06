@@ -44,6 +44,39 @@
   max-width: 640px;
 }
 
+/* Shown above the map when arriving with a ?location= filter (e.g. from
+   the Popular Property Location section's "View Listings Here" button). */
+.maps-page__filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px 20px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-accent-soft);
+  /* border-left: 4px solid var(--color-accent); */
+  border-radius: var(--radius-md);
+  color: var(--color-ink);
+  font-size: 70px;
+}
+
+.maps-page__filter-clear {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.maps-page__filter-clear:hover {
+  opacity: 0.8;
+}
+
 /* Decorative frame around the map: accent border + soft padding + shadow,
    instead of a single thin line directly on the map. */
 .maps-page__map-frame {

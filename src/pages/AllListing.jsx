@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import Footer from '../components/Footer.jsx'
 import properties from '../data/properties.js'
@@ -662,8 +662,14 @@ function loadLeaflet() {
 function Maps() {
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
+  const markersRef = useRef([])
   const navigate = useNavigate()
   const location = useLocation()
+  const [searchParams] = useSearchParams()
+
+  // e.g. /all-listing?location=Makati — set when arriving via a "View
+  // Listings Here" button on the Popular Property Location section.
+  const selectedLocation = searchParams.get('location')
 
   const goToProperty = (id) => {
     navigate(`/property/${id}`, { state: { from: '/all-listing' } })
@@ -673,19 +679,40 @@ function Maps() {
     let cancelled = false
 
     loadLeaflet().then((L) => {
-      if (cancelled || !mapContainerRef.current || mapInstanceRef.current) return
+      if (cancelled || !mapContainerRef.current) return
 
-      const map = L.map(mapContainerRef.current, {
-        scrollWheelZoom: true,
-      }).setView([14.55, 121.0], 11)
+      // Only create the map once — later runs of this effect (when the
+      // location filter changes) reuse the same map instance and just
+      // swap out the markers on it.
+      if (!mapInstanceRef.current) {
+        const map = L.map(mapContainerRef.current, {
+          scrollWheelZoom: true,
+        }).setView([14.55, 121.0], 11)
 
-      // Free, no-API-key OpenStreetMap tiles (no Google Maps billing/quota used).
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(map)
+        // Free, no-API-key OpenStreetMap tiles (no Google Maps billing/quota used).
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map)
 
-      mapProperties.forEach((property) => {
+        mapInstanceRef.current = map
+      }
+
+      const map = mapInstanceRef.current
+
+      // Clear out any pins from a previous filter before adding the new set.
+      markersRef.current.forEach((marker) => map.removeLayer(marker))
+      markersRef.current = []
+
+      // Only show pins for the selected location, if one is set — everything
+      // else stays off the map entirely rather than just being hidden.
+      const visibleProperties = selectedLocation
+        ? mapProperties.filter((property) =>
+            property.address.toLowerCase().includes(selectedLocation.toLowerCase())
+          )
+        : mapProperties
+
+      visibleProperties.forEach((property) => {
         const specsHtml =
           property.bedrooms || property.bathrooms || property.garage
             ? `
@@ -726,13 +753,30 @@ function Maps() {
             btn.addEventListener('click', () => goToProperty(property.id))
           }
         })
+
+        markersRef.current.push(marker)
       })
 
-      mapInstanceRef.current = map
+      // Frame the map around whatever's currently visible: zoomed to the
+      // filtered area's pins, or back out to the full Metro Manila view
+      // when there's no filter.
+      if (selectedLocation && visibleProperties.length > 0) {
+        const bounds = L.latLngBounds(visibleProperties.map((p) => [p.lat, p.lng]))
+        map.fitBounds(bounds, { padding: [48, 48], maxZoom: 15 })
+      } else if (!selectedLocation) {
+        map.setView([14.55, 121.0], 11)
+      }
     })
 
     return () => {
       cancelled = true
+    }
+  }, [selectedLocation])
+
+  // Tear the map down only when the page itself unmounts, not on every
+  // location-filter change (the effect above reuses the same instance).
+  useEffect(() => {
+    return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove()
         mapInstanceRef.current = null
@@ -778,6 +822,21 @@ function Maps() {
         </div>
 
         <div className="container">
+          {selectedLocation && (
+            <div className="maps-page__filter-bar">
+              <span>
+               <strong>{selectedLocation}</strong>
+              </span>
+              <button
+                type="button"
+                className="maps-page__filter-clear"
+                onClick={() => navigate('/all-listing')}
+              >
+                Show all locations
+              </button>
+            </div>
+          )}
+
           <div className="maps-page__map-frame">
             <div className="maps-page__map" ref={mapContainerRef} />
           </div>

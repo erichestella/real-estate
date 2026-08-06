@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import './PopularLocations.css'
 
 const locations = [
@@ -10,6 +11,12 @@ const locations = [
 ]
 
 function PopularLocations() {
+  const navigate = useNavigate()
+
+  const goToLocationListings = (locationName) => {
+    navigate(`/all-listing?location=${encodeURIComponent(locationName)}`)
+  }
+
   return (
     <section className="locations container">
       <div className="featured__heading">
@@ -26,7 +33,13 @@ function PopularLocations() {
             <div className="location-chip__body">
               <span className="location-chip__name">{loc.name}</span>
               <p className="location-chip__count">{loc.count} listings available in this area.</p>
-              <button type="button" className="location-chip__cta">View Listings Here</button>
+              <button
+                type="button"
+                className="location-chip__cta"
+                onClick={() => goToLocationListings(loc.name)}
+              >
+                View Listings Here
+              </button>
             </div>
           </div>
         ))}
